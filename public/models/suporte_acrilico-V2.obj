@@ -1,0 +1,41 @@
+mtllib suporte_acrilico.mtl
+o suporte_acrilico
+usemtl acrylic
+
+# Base horizontal: 100 x 55 x 6 mm
+v 0 0 50
+v 0 0 -50
+v 0 6 -50
+v 0 6 50
+v 55 0 50
+v 55 0 -50
+v 55 6 -50
+v 55 6 50
+f 1 4 3 2
+f 5 6 7 8
+f 1 2 6 5
+f 2 3 7 6
+f 3 4 8 7
+f 4 1 5 8
+
+# Back plate, with small chamfers at the upper corners
+v 49 6 50
+v 49 6 -50
+v 49 117 -50
+v 49 120 -47
+v 49 120 47
+v 49 117 50
+v 55 6 50
+v 55 6 -50
+v 55 117 -50
+v 55 120 -47
+v 55 120 47
+v 55 117 50
+f 9 10 11 12 13 14
+f 15 20 19 18 17 16
+f 9 15 16 10
+f 10 16 17 11
+f 11 17 18 12
+f 12 18 19 13
+f 13 19 20 14
+f 14 20 15 9

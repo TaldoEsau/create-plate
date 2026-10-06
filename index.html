@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Estúdio de Placas 3D & Gerador de QR Code</title>
+  <meta name="description" content="Crie e personalize placas de acrílico de mesa com visualização 3D realista em tempo real e exportação em alta resolução (300 DPI) para impressão física.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/src/style.css">
+</head>
+<body class="dark-theme">
+  <!-- Glowing background effect -->
+  <div class="background-effects" aria-hidden="true">
+    <div class="ambient-glow glow-1"></div>
+    <div class="ambient-glow glow-2"></div>
+    <div class="ambient-glow glow-3"></div>
+  </div>
+
+  <div class="app-layout">
+    <!-- Top Navigation Bar -->
+    <header class="top-nav glass-panel">
+      <div class="nav-brand">
+        <div class="brand-badge">
+          <span class="sparkle-icon">✨</span>
+          <span>Studio 3D</span>
+        </div>
+        <h1 class="brand-title">Criador de <span>Placas & QR Code</span></h1>
+      </div>
+
+      <div class="nav-meta">
+        <div class="spec-chip" id="spec-chip">
+          <span class="chip-dot"></span>
+          <span id="spec-chip-text">110 x 150 mm • Acrílico Cristal 6mm</span>
+        </div>
+        <div class="render-fps-badge" id="fps-badge">60 FPS</div>
+      </div>
+    </header>
+
+    <!-- Main Studio Workspace -->
+    <main class="studio-workspace">
+      <!-- Left Panel: Customization Controls -->
+      <aside class="editor-sidebar glass-panel" id="editor-sidebar">
+        <!-- Editor Tabs Navigation -->
+        <div class="editor-tabs" role="tablist">
+          <button type="button" class="tab-btn active" id="tab-btn-art" data-tab="tab-content-art">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+            <span>Arte & Template</span>
+          </button>
+          <button type="button" class="tab-btn" id="tab-btn-qr" data-tab="tab-content-qr">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+            <span>QR Code</span>
+          </button>
+          <button type="button" class="tab-btn" id="tab-btn-dim" data-tab="tab-content-dim">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+            <span>Dimensões</span>
+          </button>
+        </div>
+
+        <!-- TAB 1: ARTE & TEMPLATE -->
+        <section class="tab-panel active" id="tab-content-art">
+          <div class="panel-section-header">
+            <h3>Modo de Composição</h3>
+            <span class="sub-hint">Escolha entre nosso modelo pronto ou envie sua arte completa</span>
+          </div>
+
+          <!-- Selector: Template vs Upload -->
+          <div class="mode-selector-grid">
+            <label class="mode-card active" id="mode-card-template">
+              <input type="radio" name="artwork_mode" value="template_google" checked>
+              <div class="mode-card-icon">⭐</div>
+              <div class="mode-card-text">
+                <span class="mode-card-title">Avaliação Google</span>
+                <span class="mode-card-desc">5 estrelas, moldura e chamada</span>
+              </div>
+            </label>
+
+            <label class="mode-card" id="mode-card-upload">
+              <input type="radio" name="artwork_mode" value="custom_upload">
+              <div class="mode-card-icon">🖼️</div>
+              <div class="mode-card-text">
+                <span class="mode-card-title">Subir Arte Pronta</span>
+                <span class="mode-card-desc">Upload de PNG/JPG próprio</span>
+              </div>
+            </label>
+          </div>
+
+          <!-- SECTION: GOOGLE TEMPLATE FIELDS -->
+          <div class="editor-subgroup" id="group-template-fields">
+            <div class="input-group">
+              <label for="input-title-line1">Texto Superior</label>
+              <input type="text" id="input-title-line1" value="Nos avalie no" maxlength="35" placeholder="Ex: Nos avalie no">
+            </div>
+
+            <div class="input-group">
+              <label for="input-title-brand">Destaque / Marca</label>
+              <input type="text" id="input-title-brand" value="Google" maxlength="30" placeholder="Ex: Google">
+              <span class="field-hint">Renderizado com a tipografia e cores oficiais Google</span>
+            </div>
+
+            <div class="input-group">
+              <label for="input-footer-text">Chamada Inferior (Rodapé)</label>
+              <input type="text" id="input-footer-text" value="APONTE A CÂMERA E AVALIE!" maxlength="45" placeholder="Ex: APONTE A CÂMERA E AVALIE!">
+            </div>
+
+            <div class="toggle-group">
+              <div class="toggle-label-wrap">
+                <label for="toggle-google-frame">Moldura Multicolorida Google</label>
+                <span class="field-hint">Borda estilizada com amarelo, vermelho, azul e verde</span>
+              </div>
+              <label class="switch">
+                <input type="checkbox" id="toggle-google-frame" checked>
+                <span class="slider round"></span>
+              </label>
+            </div>
+          </div>
+
+          <!-- SECTION: CUSTOM ARTWORK UPLOAD -->
+          <div class="editor-subgroup hidden" id="group-upload-fields">
+            <!-- Box de Download do Gabarito Oficial -->
+            <div class="template-download-banner">
+              <div class="banner-icon">📐</div>
+              <div class="banner-info">
+                <span class="banner-title">Precisa do gabarito para criar sua arte?</span>
+                <span class="banner-desc">Baixe o molde oficial nas dimensões exatas da placa (110 × 150 mm) a 300 DPI com margem de segurança.</span>
+              </div>
+              <button type="button" class="btn-download-template" id="btn-download-template">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                <span>Baixar Gabarito (300 DPI)</span>
+              </button>
+            </div>
+
+            <div class="upload-dropzone" id="artwork-dropzone">
+              <input type="file" id="artwork-file-input" accept="image/png, image/jpeg, image/webp" hidden>
+              <div class="dropzone-content" id="dropzone-empty-content">
+                <div class="dropzone-icon">
+                  <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                </div>
+                <span class="dropzone-title">Arraste sua arte pronta aqui</span>
+                <span class="dropzone-sub">ou clique para selecionar arquivo</span>
+                <span class="dropzone-badge">Recomendado: 110 × 150 mm (1299 × 1772 px)</span>
+              </div>
+
+              <div class="dropzone-preview hidden" id="dropzone-preview-wrap">
+                <img id="artwork-preview-thumb" src="" alt="Prévia da arte enviada">
+                <div class="preview-meta">
+                  <span id="artwork-file-name" class="meta-filename"></span>
+                  <span id="artwork-file-res" class="meta-resolution">Carregado com sucesso</span>
+                </div>
+                <button type="button" class="btn-icon-danger" id="btn-remove-artwork" title="Remover arte">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                </button>
+              </div>
+            </div>
+
+            <!-- Painel de Encaixe e Centralização da Imagem -->
+            <div class="upload-adjustments-card" id="upload-adjustments-card">
+              <div class="panel-section-header" style="margin-bottom: 0.75rem;">
+                <h4 style="font-size: 0.95rem; font-weight: 700;">Ajuste e Encaixe no Modelo 3D</h4>
+                <span class="sub-hint">Mova, ajuste o zoom ou centralize sua imagem</span>
+              </div>
+
+              <div class="input-group">
+                <label for="select-fit-mode">Modo de Enquadramento</label>
+                <select id="select-fit-mode" class="styled-select">
+                  <option value="cover" selected>Preencher Área Total (Cover)</option>
+                  <option value="contain">Conter Proporção Original (Contain)</option>
+                </select>
+              </div>
+
+              <div class="slider-row">
+                <div class="slider-header-flex">
+                  <label for="range-img-scale">Zoom / Escala da Imagem</label>
+                  <div class="stepper-wrap">
+                    <button type="button" class="btn-step-sm" id="btn-step-img-minus" title="Diminuir imagem (➖)">−</button>
+                    <span class="slider-val-badge" id="label-img-scale">100%</span>
+                    <button type="button" class="btn-step-sm" id="btn-step-img-plus" title="Aumentar imagem (➕)">+</button>
+                  </div>
+                </div>
+                <input type="range" id="range-img-scale" min="20" max="400" value="100" step="2" class="styled-range">
+              </div>
+
+              <div class="slider-row">
+                <div class="slider-header-flex">
+                  <label for="range-img-offset-x">Posição Horizontal (X)</label>
+                  <span class="slider-val-badge" id="label-img-offset-x">0%</span>
+                </div>
+                <input type="range" id="range-img-offset-x" min="-150" max="150" value="0" step="1" class="styled-range">
+              </div>
+
+              <div class="slider-row">
+                <div class="slider-header-flex">
+                  <label for="range-img-offset-y">Posição Vertical (Y)</label>
+                  <span class="slider-val-badge" id="label-img-offset-y">0%</span>
+                </div>
+                <input type="range" id="range-img-offset-y" min="-150" max="150" value="0" step="1" class="styled-range">
+              </div>
+
+              <button type="button" class="btn-center-image" id="btn-center-image">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="22" y1="12" x2="18" y2="12"/><line x1="6" y1="12" x2="2" y2="12"/><line x1="12" y1="6" x2="12" y2="2"/><line x1="12" y1="22" x2="12" y2="18"/></svg>
+                <span>Centralizar Imagem no Modelo 3D</span>
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <!-- TAB 2: QR CODE -->
+        <section class="tab-panel" id="tab-content-qr">
+          <div class="panel-section-header">
+            <h3>Personalização do QR Code</h3>
+            <span class="sub-hint">Defina o destino e estilize módulos, cores e logo central</span>
+          </div>
+
+          <div class="input-group">
+            <label for="input-qr-url">Link de Destino / URL <span class="req">*</span></label>
+            <div class="input-icon-wrap">
+              <svg class="input-prefix-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+              <input type="text" id="input-qr-url" value="https://google.com" placeholder="https://g.page/r/sua-empresa/review">
+            </div>
+            <span class="field-hint">Cole o link da sua página de avaliação, Instagram ou site</span>
+          </div>
+
+          <!-- Logo Central Selector -->
+          <div class="input-group">
+            <label>Logotipo no Centro do QR Code</label>
+            <div class="logo-selector-grid">
+              <label class="logo-pill-card active" id="pill-logo-google">
+                <input type="radio" name="qr_logo_choice" value="google" checked>
+                <img src="/assets/google-logo.svg" alt="Google" width="20" height="20">
+                <span>Google</span>
+              </label>
+              <label class="logo-pill-card" id="pill-logo-custom">
+                <input type="radio" name="qr_logo_choice" value="custom">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                <span>Sua Logo</span>
+              </label>
+              <label class="logo-pill-card" id="pill-logo-none">
+                <input type="radio" name="qr_logo_choice" value="none">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>
+                <span>Sem Logo</span>
+              </label>
+            </div>
+
+            <!-- Upload da Logo Própria -->
+            <div class="custom-logo-upload-wrap hidden" id="custom-logo-upload-wrap">
+              <input type="file" id="input-custom-logo-file" accept="image/png, image/jpeg, image/webp" hidden>
+              <div class="logo-mini-dropzone" id="logo-mini-dropzone">
+                <span id="logo-mini-text">Clique para enviar logo em PNG transparente</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- QR Modules Style -->
+          <div class="toggle-group">
+            <div class="toggle-label-wrap">
+              <label for="toggle-qr-rounded">Cantos Arredondados nos Módulos</label>
+              <span class="field-hint">Visual moderno, suave e estilizado</span>
+            </div>
+            <label class="switch">
+              <input type="checkbox" id="toggle-qr-rounded" checked>
+              <span class="slider round"></span>
+            </label>
+          </div>
+
+          <!-- QR Foreground Color -->
+          <div class="input-group">
+            <label for="input-qr-color">Cor dos Módulos do QR Code</label>
+            <div class="color-selection-row">
+              <input type="color" id="input-qr-color" value="#000000" class="styled-color-picker">
+              <div class="preset-dots-wrap" id="preset-dots-wrap">
+                <button type="button" class="preset-dot active" style="background: #000000;" data-color="#000000" title="Preto"></button>
+                <button type="button" class="preset-dot" style="background: #1a73e8;" data-color="#1a73e8" title="Azul Google"></button>
+                <button type="button" class="preset-dot" style="background: #1e8e3e;" data-color="#1e8e3e" title="Verde Google"></button>
+                <button type="button" class="preset-dot" style="background: #d93025;" data-color="#d93025" title="Vermelho Google"></button>
+                <button type="button" class="preset-dot" style="background: #f29900;" data-color="#f29900" title="Amarelo Google"></button>
+                <button type="button" class="preset-dot" style="background: #0f172a;" data-color="#0f172a" title="Azul Marinho"></button>
+              </div>
+            </div>
+          </div>
+
+          <!-- NOVO: POSICIONAMENTO LIVRE DO QR CODE NA PLACA -->
+          <div class="editor-subgroup" style="margin-top: 1.5rem; border-top: 1px solid var(--border-glass); padding-top: 1.25rem;">
+            <div class="panel-section-header">
+              <h3 style="font-size: 1.05rem;">Posição do QR Code na Placa</h3>
+              <span class="sub-hint">Mova e redimensione o QR Code livremente sobre sua arte</span>
+            </div>
+
+            <!-- Toggle sobre a arte enviada -->
+            <div class="toggle-group" style="margin-bottom: 1rem;">
+              <div class="toggle-label-wrap">
+                <label for="toggle-qr-overlay">Exibir QR Code sobre a Arte Enviada</label>
+                <span class="field-hint">Permite estampar o QR Code sobre a imagem que você subiu</span>
+              </div>
+              <label class="switch">
+                <input type="checkbox" id="toggle-qr-overlay" checked>
+                <span class="slider round"></span>
+              </label>
+            </div>
+
+            <!-- Presets Rápidos de Posição -->
+            <div class="input-group">
+              <label>Posições Rápidas</label>
+              <div class="placement-presets-grid">
+                <button type="button" class="btn-preset-pos" data-pos-x="50" data-pos-y="25">Superior</button>
+                <button type="button" class="btn-preset-pos" data-pos-x="50" data-pos-y="50">Centro</button>
+                <button type="button" class="btn-preset-pos active" data-pos-x="50" data-pos-y="68">Inferior</button>
+                <button type="button" class="btn-preset-pos" data-pos-x="76" data-pos-y="78">Canto Dir.</button>
+                <button type="button" class="btn-preset-pos" data-pos-x="24" data-pos-y="78">Canto Esq.</button>
+              </div>
+            </div>
+
+            <!-- Sliders de Posição X e Y -->
+            <div class="slider-row">
+              <div class="slider-header-flex">
+                <label for="range-qr-pos-x">Posição Horizontal (X)</label>
+                <span class="slider-val-badge" id="label-qr-pos-x">50%</span>
+              </div>
+              <input type="range" id="range-qr-pos-x" min="15" max="85" value="50" step="1" class="styled-range">
+            </div>
+
+            <div class="slider-row">
+              <div class="slider-header-flex">
+                <label for="range-qr-pos-y">Posição Vertical (Y)</label>
+                <span class="slider-val-badge" id="label-qr-pos-y">68%</span>
+              </div>
+              <input type="range" id="range-qr-pos-y" min="15" max="88" value="68" step="1" class="styled-range">
+            </div>
+
+            <!-- Slider de Tamanho do QR Code -->
+            <div class="slider-row">
+              <div class="slider-header-flex">
+                <label for="range-qr-size">Tamanho do QR Code</label>
+                <div class="stepper-wrap">
+                  <button type="button" class="btn-step-sm" id="btn-step-qr-minus" title="Diminuir QR Code (➖)">−</button>
+                  <span class="slider-val-badge" id="label-qr-size">42%</span>
+                  <button type="button" class="btn-step-sm" id="btn-step-qr-plus" title="Aumentar QR Code (➕)">+</button>
+                </div>
+              </div>
+              <input type="range" id="range-qr-size" min="15" max="85" value="42" step="1" class="styled-range">
+            </div>
+
+            <!-- Toggle Cartão Branco de Destaque -->
+            <div class="toggle-group" style="margin-top: 0.75rem;">
+              <div class="toggle-label-wrap">
+                <label for="toggle-qr-card-bg">Fundo Branco de Destaque</label>
+                <span class="field-hint">Adiciona base branca com cantos arredondados para contraste perfeito</span>
+              </div>
+              <label class="switch">
+                <input type="checkbox" id="toggle-qr-card-bg" checked>
+                <span class="slider round"></span>
+              </label>
+            </div>
+
+            <button type="button" class="btn-center-image" id="btn-center-qr" style="margin-top: 12px;">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="22" y1="12" x2="18" y2="12"/><line x1="6" y1="12" x2="2" y2="12"/><line x1="12" y1="6" x2="12" y2="2"/><line x1="12" y1="22" x2="12" y2="18"/></svg>
+              <span>Centralizar QR Code na Placa</span>
+            </button>
+          </div>
+        </section>
+
+        <!-- TAB 3: DIMENSÕES -->
+        <section class="tab-panel" id="tab-content-dim">
+          <div class="panel-section-header">
+            <h3>Formato Físico do Suporte</h3>
+            <span class="sub-hint">Calibrado com precisão para corte e colagem manual</span>
+          </div>
+
+          <div class="dimension-preset-box">
+            <div class="box-badge">Padrão Atual de Produção</div>
+            <div class="box-title">Display em L Vertical • 11 x 15 cm</div>
+            <p class="box-desc">Compatível com a geometria de suporte de acrílico em estoque (110 mm de largura x 150 mm de altura x 6 mm de espessura).</p>
+          </div>
+
+          <div class="dimensions-input-grid">
+            <div class="input-group">
+              <label for="input-dim-width">Largura (cm)</label>
+              <input type="number" id="input-dim-width" value="11" min="6" max="30" step="0.5">
+            </div>
+            <div class="input-group">
+              <label for="input-dim-height">Altura (cm)</label>
+              <input type="number" id="input-dim-height" value="15" min="8" max="40" step="0.5">
+            </div>
+          </div>
+
+          <button type="button" class="btn-outline-small" id="btn-reset-dimensions">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/></svg>
+            <span>Restaurar 11 x 15 cm Padrão</span>
+          </button>
+
+          <button type="button" class="btn-download-template-dim" id="btn-download-template-top">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            <span>Baixar Gabarito da Placa (300 DPI)</span>
+          </button>
+        </section>
+      </aside>
+
+      <!-- Center & Right: 3D Scene Viewport & Export Output -->
+      <section class="viewport-section">
+        <!-- Viewport Glass Container -->
+        <div class="viewport-container" id="viewport-container">
+          <!-- 3D Canvas Mount Point -->
+          <div id="three-canvas-container" class="three-canvas-container"></div>
+
+          <!-- 2D Print Preview (Alternative view) -->
+          <div id="print-2d-preview" class="print-2d-preview hidden">
+            <!-- Barra de Modos de Arrastar com Mouse no 2D -->
+            <div class="canvas-2d-action-bar">
+              <div class="canvas-2d-mode-toggles">
+                <button type="button" class="mode-chip-btn active" id="btn-2d-drag-img" title="Selecionar Imagem de Fundo para mover ou redimensionar">
+                  <span>🖼️ Imagem</span>
+                </button>
+                <button type="button" class="mode-chip-btn" id="btn-2d-drag-qr" title="Selecionar QR Code para mover ou redimensionar">
+                  <span>📱 QR Code</span>
+                </button>
+                <button type="button" class="mode-chip-btn btn-scale-step" id="btn-scale-down" title="Diminuir tamanho do elemento selecionado (➖)">
+                  <span>➖ Diminuir</span>
+                </button>
+                <button type="button" class="mode-chip-btn btn-scale-step" id="btn-scale-up" title="Aumentar tamanho do elemento selecionado (➕)">
+                  <span>➕ Aumentar</span>
+                </button>
+                <button type="button" class="mode-chip-btn btn-chip-center" id="btn-2d-center-current" title="Centralizar o elemento selecionado no meio da placa (ou dê Duplo Clique)">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="22" y1="12" x2="18" y2="12"/><line x1="6" y1="12" x2="2" y2="12"/><line x1="12" y1="6" x2="12" y2="2"/><line x1="12" y1="22" x2="12" y2="18"/></svg>
+                  <span>🎯 Centralizar</span>
+                </button>
+              </div>
+              <span class="canvas-2d-tip">💡 <b>Arraste as alças na borda</b> para aumentar/diminuir • <b>Arraste o meio</b> para mover • <b>Duplo clique</b> centraliza</span>
+            </div>
+
+            <div class="preview-paper-card">
+              <div class="preview-canvas-wrapper" id="preview-canvas-wrapper">
+                <canvas id="preview-2d-canvas" class="preview-2d-canvas"></canvas>
+                <svg id="preview-2d-guides" class="preview-2d-guides" viewBox="0 0 100 100" preserveAspectRatio="none"></svg>
+                
+                <!-- Borda Interativa com Alças de Aumentar / Diminuir com o Mouse -->
+                <div class="transform-box" id="transform-box">
+                  <div class="transform-handle handle-nw" data-handle="nw" title="Arraste para redimensionar"></div>
+                  <div class="transform-handle handle-ne" data-handle="ne" title="Arraste para redimensionar"></div>
+                  <div class="transform-handle handle-se" data-handle="se" title="Arraste para redimensionar"></div>
+                  <div class="transform-handle handle-sw" data-handle="sw" title="Arraste para redimensionar"></div>
+                  <div class="transform-handle handle-n" data-handle="n" title="Arraste para redimensionar"></div>
+                  <div class="transform-handle handle-s" data-handle="s" title="Arraste para redimensionar"></div>
+                  <div class="transform-handle handle-e" data-handle="e" title="Arraste para redimensionar"></div>
+                  <div class="transform-handle handle-w" data-handle="w" title="Arraste para redimensionar"></div>
+                  
+                  <!-- Toolbar de zoom flutuante anexada à borda do elemento -->
+                  <div class="transform-toolbar" id="transform-toolbar">
+                    <button type="button" class="btn-micro-zoom" id="btn-micro-minus" title="Diminuir Tamanho (➖)">−</button>
+                    <span class="transform-size-pill" id="transform-size-pill">100%</span>
+                    <button type="button" class="btn-micro-zoom" id="btn-micro-plus" title="Aumentar Tamanho (➕)">+</button>
+                  </div>
+                </div>
+
+                <div id="selection-badge-indicator" class="selection-badge-indicator">
+                  <span id="selection-badge-text">🖼️ Imagem Selecionada • Arraste as bordas/alças para redimensionar</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Loading Spinner overlay -->
+          <div class="viewport-loader hidden" id="viewport-loader">
+            <div class="modern-spinner"></div>
+            <span id="viewport-loader-text">Sincronizando modelo 3D...</span>
+          </div>
+
+          <!-- Floating Viewport Controls Toolbar -->
+          <div class="floating-view-toolbar">
+            <div class="view-mode-toggles">
+              <button type="button" class="view-tool-btn active" id="btn-view-3d" title="Modo 3D Interativo">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+                <span>3D</span>
+              </button>
+              <button type="button" class="view-tool-btn" id="btn-view-2d" title="Prévia 2D de Impressão">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>
+                <span>Arte 2D</span>
+              </button>
+            </div>
+
+            <div class="toolbar-divider"></div>
+
+            <div class="camera-angle-presets">
+              <button type="button" class="camera-btn active" data-angle="perspective" title="Visão em Perspectiva">Perspectiva</button>
+              <button type="button" class="camera-btn" data-angle="front" title="Visão Frontal">Frontal</button>
+              <button type="button" class="camera-btn" data-angle="side" title="Visão Lateral">Lateral</button>
+            </div>
+
+            <div class="toolbar-divider"></div>
+
+            <!-- Alternador de Ação do Mouse no 3D: Girar vs Arrastar na Placa -->
+            <div class="interact-mode-group">
+              <button type="button" class="interact-mode-btn active" id="btn-mode-orbit" title="Girar Placa em 360°">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.19"/></svg>
+                <span>Girar 3D</span>
+              </button>
+              <button type="button" class="interact-mode-btn" id="btn-mode-drag-surface" title="Arrastar com o mouse diretamente na placa 3D">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 11V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v0M14 10V4a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v2M10 10.5V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v8M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 13"/></svg>
+                <span>Mover na Placa</span>
+              </button>
+              <button type="button" class="interact-mode-btn" id="btn-center-element-3d" title="Centralizar elemento selecionado no modelo 3D (ou dê Duplo Clique diretamente na placa)">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="22" y1="12" x2="18" y2="12"/><line x1="6" y1="12" x2="2" y2="12"/><line x1="12" y1="6" x2="12" y2="2"/><line x1="12" y1="22" x2="12" y2="18"/></svg>
+                <span>Centralizar</span>
+              </button>
+            </div>
+
+            <div class="toolbar-divider"></div>
+
+            <button type="button" class="icon-toggle-btn" id="btn-toggle-autorotate" title="Alternar Rotação Automática">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.19"/></svg>
+            </button>
+            <button type="button" class="icon-toggle-btn" id="btn-reset-camera" title="Centralizar Placa">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="m10 15 5-3-5-3v6Z"/></svg>
+            </button>
+          </div>
+
+          <!-- Bottom Interaction Helper Hint -->
+          <div class="interaction-hint">
+            <span class="hint-mouse-icon">🖱️</span>
+            <span>Arraste para rotacionar em 360° • Role para zoom • Botão direito para mover</span>
+          </div>
+        </div>
+
+        <!-- Export Action Bar -->
+        <footer class="export-bar glass-panel">
+          <div class="export-info">
+            <div class="export-info-title">Pronto para Impressão e Corte</div>
+            <div class="export-info-desc" id="export-dimension-label">110 x 150 mm • 300 DPI em escala 1:1</div>
+          </div>
+
+          <div class="export-buttons-group">
+            <button type="button" class="btn-export btn-png" id="btn-download-png">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+              <span>Baixar PNG (300 DPI)</span>
+            </button>
+
+            <button type="button" class="btn-export btn-pdf" id="btn-download-pdf">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+              <span>Baixar PDF (Gráfica)</span>
+            </button>
+
+            <button type="button" class="btn-export btn-print" id="btn-direct-print" title="Imprimir diretamente do navegador">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+              <span>Imprimir</span>
+            </button>
+          </div>
+        </footer>
+      </section>
+    </main>
+  </div>
+
+  <!-- Toast Notification Mount Container -->
+  <div id="toast-container" class="toast-container"></div>
+
+  <!-- Offscreen Canvas for master 300 DPI graphics generation -->
+  <canvas id="offscreen-master-canvas" style="display: none;"></canvas>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>
