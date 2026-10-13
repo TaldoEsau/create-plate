@@ -17,8 +17,8 @@ export function createAcrylicPlaqueMesh(dimensions) {
 
   const w = Number(dimensions.widthMm) || 110;        // ex: 110 mm
   const h = Number(dimensions.heightMm) || 150;       // ex: 150 mm
-  const t = Number(dimensions.thicknessMm) || 6;       // ex: 6 mm
-  const baseD = Number(dimensions.baseDepthMm) || 55; // ex: 55 mm
+  const t = Number(dimensions.thicknessMm) || 2;       // 2 mm
+  const baseD = Number(dimensions.baseDepthMm) || 45; // ex: 45 mm
   
   // Ângulo de inclinação da face frontal em relação à vertical (ex: 82° com a mesa = 8° com a vertical)
   const angleFromHorizontal = dimensions.tiltAngleDeg || 82;
@@ -58,7 +58,7 @@ export function createAcrylicPlaqueMesh(dimensions) {
   // ==========================================
   // 2. EXTRUSÃO DO PERFIL NA LARGURA W
   // ==========================================
-  const bevel = 0.6;
+  const bevel = 0.2;
   const extrudeSettings = {
     steps: 1,
     depth: w,
@@ -66,7 +66,7 @@ export function createAcrylicPlaqueMesh(dimensions) {
     bevelThickness: bevel,
     bevelSize: bevel,
     bevelOffset: 0,
-    bevelSegments: 3
+    bevelSegments: 2
   };
 
   const acrylicGeo = new THREE.ExtrudeGeometry(shape, extrudeSettings);
@@ -130,8 +130,8 @@ export function createAcrylicPlaqueMesh(dimensions) {
   const stickerX = 0;
   
   // Posicionamos o adesivo imediatamente na superfície frontal
-  const offsetFront = bevel + 0.12;
-  const stickerY = (cosT * midH) + (sinT * offsetFront) + 0.6;
+  const offsetFront = bevel + 0.04;
+  const stickerY = (cosT * midH) + (sinT * offsetFront) + 0.15;
   const stickerZ = (-sinT * midH) + (cosT * offsetFront);
 
   stickerMesh.position.set(stickerX, stickerY, stickerZ);

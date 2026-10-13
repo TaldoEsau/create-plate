@@ -1581,7 +1581,7 @@ export class ControlsManager {
       const heightMm = Math.round(h * 10);
 
       stateManager.update('dimension', { widthMm, heightMm });
-      const label = `${widthMm} x ${heightMm} mm • Acrílico Cristal 6mm`;
+      const label = `${widthMm} x ${heightMm} mm • Acrílico Branco 2mm`;
       if (chipText) chipText.textContent = label;
       if (exportDimLabel) exportDimLabel.textContent = `${widthMm} x ${heightMm} mm • 300 DPI em escala 1:1`;
     };
@@ -1608,11 +1608,14 @@ export class ControlsManager {
     const autoRotateBtn = document.getElementById('btn-toggle-autorotate');
     const resetCameraBtn = document.getElementById('btn-reset-camera');
 
+    const viewportContainer = document.getElementById('viewport-container');
+
     btn3D?.addEventListener('click', () => {
       btn3D.classList.add('active');
       btn2D?.classList.remove('active');
       view3D?.classList.remove('hidden');
       view2D?.classList.add('hidden');
+      viewportContainer?.classList.remove('mode-2d');
       stateManager.set('view.is3DMode', true);
     });
 
@@ -1621,6 +1624,7 @@ export class ControlsManager {
       btn3D?.classList.remove('active');
       view2D?.classList.remove('hidden');
       view3D?.classList.add('hidden');
+      viewportContainer?.classList.add('mode-2d');
       stateManager.set('view.is3DMode', false);
       this.updateTransformBox();
     });

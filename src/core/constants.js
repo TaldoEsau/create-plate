@@ -5,10 +5,10 @@
 export const DEFAULT_DIMENSIONS = {
   widthMm: 110,         // 11 cm
   heightMm: 150,        // 15 cm
-  thicknessMm: 6,       // Espessura do acrílico (6mm)
-  baseDepthMm: 55,      // Profundidade da base horizontal (55mm)
+  thicknessMm: 2,       // Espessura do acrílico (2mm)
+  baseDepthMm: 45,      // Profundidade da base horizontal (45mm)
   tiltAngleDeg: 82,     // Ângulo de inclinação ergonômico do display de balcão
-  cornerChamferMm: 3    // Chanfro sutil nos cantos superiores
+  cornerChamferMm: 2    // Chanfro sutil nos cantos superiores
 };
 
 export const GOOGLE_COLORS = {
@@ -30,14 +30,13 @@ export const COLOR_PRESETS = [
 ];
 
 export const ACRYLIC_MATERIAL = {
-  color: 0xf5faff,
-  transmission: 0.94,
+  color: 0xffffff,
+  transmission: 0,
   opacity: 1,
-  transparent: true,
-  roughness: 0.04,
-  metalness: 0.05,
-  ior: 1.491,          // PMMA (Acrílico)
-  thickness: 6.0,
+  transparent: false,
+  roughness: 0.22,
+  metalness: 0.02,
+  thickness: 2.0,
   clearcoat: 1.0,
   clearcoatRoughness: 0.05,
   specularIntensity: 1.0,
