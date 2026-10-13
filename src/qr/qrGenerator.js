@@ -1,4 +1,5 @@
 import qrcode from 'qrcode-generator';
+import { getIconById } from '../artwork/iconLibrary.js';
 
 // Paths oficiais do logotipo "G" do Google
 const PATH_BLUE = new Path2D("M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.8-2.4 3.66v3.05h3.88c2.27-2.09 3.665-5.17 3.665-9.15z");
@@ -9,11 +10,11 @@ const PATH_RED = new Path2D("M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.1
 /**
  * Gerador de QR Code vetorial de alta precisão e performance em tempo real.
  * Renderiza nativamente no canvas, com cantos arredondados, olhos estilizados e logotipo central.
+ * Suporta múltiplos QR Codes simultâneos e logos como Google, Instagram, WhatsApp, PIX, Wi-Fi, Site, etc.
  */
 class QRGeneratorService {
   constructor() {
-    this.cacheKey = null;
-    this.cachedCanvas = null;
+    this.canvasCache = new Map();
     this.customImageCache = new Map();
   }
 
@@ -24,6 +25,8 @@ class QRGeneratorService {
    * @returns {Promise<HTMLCanvasElement>}
    */
   async generateQRCode(config, size = 600) {
+    if (!config) return null;
+
     const key = JSON.stringify({
       url: config.url || '',
       fgColor: config.fgColor || '#000000',
@@ -34,8 +37,8 @@ class QRGeneratorService {
       size
     });
 
-    if (key === this.cacheKey && this.cachedCanvas) {
-      return this.cachedCanvas;
+    if (this.canvasCache.has(key)) {
+      return this.canvasCache.get(key);
     }
 
     const canvas = document.createElement('canvas');
@@ -46,8 +49,15 @@ class QRGeneratorService {
     // 1. Gera matriz matemática do QR Code
     const qr = qrcode(0, 'H'); // Nível H: até 30% de tolerância a falhas para acomodar logo
     const textData = config.url && config.url.trim().length > 0 ? config.url.trim() : 'https://google.com';
-    qr.addData(textData);
-    qr.make();
+    try {
+      qr.addData(textData);
+      qr.make();
+    } catch {
+      // Fallback para string básica caso ocorra erro no payload
+      const safeQr = qrcode(0, 'M');
+      safeQr.addData(textData.substring(0, 80));
+      safeQr.make();
+    }
 
     const count = qr.getModuleCount();
     const marginModules = 2;
@@ -67,7 +77,7 @@ class QRGeneratorService {
     ctx.fillStyle = fgColor;
 
     // 3. Área reservada para o Logo Central
-    const hasLogo = config.logoChoice !== 'none';
+    const hasLogo = config.logoChoice && config.logoChoice !== 'none';
     const centerX = size / 2;
     const centerY = size / 2;
     // O logo ocupa aproximadamente 24% da área total
@@ -181,6 +191,31 @@ class QRGeneratorService {
         ctx.fill(PATH_RED);
 
         ctx.restore();
+      } else if (config.logoChoice === 'instagram') {
+        const icon = getIconById('instagram');
+        if (icon && icon.draw) {
+          icon.draw(ctx, centerX - (logoSize / 2), centerY - (logoSize / 2), logoSize, '#E1306C');
+        }
+      } else if (config.logoChoice === 'whatsapp') {
+        const icon = getIconById('whatsapp');
+        if (icon && icon.draw) {
+          icon.draw(ctx, centerX - (logoSize / 2), centerY - (logoSize / 2), logoSize, '#25D366');
+        }
+      } else if (config.logoChoice === 'pix') {
+        const icon = getIconById('pix');
+        if (icon && icon.draw) {
+          icon.draw(ctx, centerX - (logoSize / 2), centerY - (logoSize / 2), logoSize, '#00BDAE');
+        }
+      } else if (config.logoChoice === 'wifi') {
+        const icon = getIconById('wifi');
+        if (icon && icon.draw) {
+          icon.draw(ctx, centerX - (logoSize / 2), centerY - (logoSize / 2), logoSize, '#0284c7');
+        }
+      } else if (config.logoChoice === 'globe' || config.logoChoice === 'site') {
+        const icon = getIconById('globe');
+        if (icon && icon.draw) {
+          icon.draw(ctx, centerX - (logoSize / 2), centerY - (logoSize / 2), logoSize, '#1e293b');
+        }
       } else if (config.logoChoice === 'custom' && config.customLogoUrl) {
         // Logo personalizado enviado pelo usuário
         let customImg = this.customImageCache.get(config.customLogoUrl);
@@ -206,8 +241,7 @@ class QRGeneratorService {
       }
     }
 
-    this.cacheKey = key;
-    this.cachedCanvas = canvas;
+    this.canvasCache.set(key, canvas);
     return canvas;
   }
 }

@@ -85,21 +85,14 @@ export function createAcrylicPlaqueMesh(dimensions) {
   const box = new THREE.Box3().setFromBufferAttribute(acrylicGeo.attributes.position);
   acrylicGeo.translate(0, -box.min.y, 0);
 
-  // Material de acrílico cristal de alta fidelidade óptica
-  const acrylicMat = new THREE.MeshPhysicalMaterial({
-    color: 0xf8fbff,
-    transparent: true,
-    opacity: 0.65,
-    transmission: 0.85,
-    roughness: 0.08,
-    metalness: 0.0,
-    ior: 1.491,
-    thickness: t,
-    specularIntensity: 1.2,
-    clearcoat: 1.0,
-    clearcoatRoughness: 0.05,
-    side: THREE.DoubleSide,
-    depthWrite: false
+  // Material da placa: Acrílico Branco Leitoso Opaco de alta qualidade
+  const acrylicMat = new THREE.MeshStandardMaterial({
+    color: 0xffffff,
+    roughness: 0.22,
+    metalness: 0.02,
+    transparent: false,
+    opacity: 1.0,
+    side: THREE.FrontSide
   });
 
   const acrylicMesh = new THREE.Mesh(acrylicGeo, acrylicMat);
@@ -112,33 +105,33 @@ export function createAcrylicPlaqueMesh(dimensions) {
   // ==========================================
   // 3. FACE DA ARTE ADESIVADA (FRONTE DA PLACA)
   // ==========================================
-  const stickerW = w - 2;
-  const stickerH = h - 4;
+  // Cobre 100% da face frontal de ponta a ponta sem borda branca
+  const stickerW = w + (bevel * 2);
+  const stickerH = h + bevel;
   const stickerGeo = new THREE.PlaneGeometry(stickerW, stickerH);
 
-  // Material fotográfico sem lavagem de luz:
-  // Usamos MeshBasicMaterial com toneMapped: false para que as cores do design
-  // mantenham 100% da fidelidade, contraste de pretos e saturação originais sem desbotamento!
+  // Material da arte: renderiza apenas na face frontal (FrontSide)
+  // para que a arte não apareça espelhada ou vazada atrás da placa
   const stickerMat = new THREE.MeshBasicMaterial({
     color: 0xffffff,
-    side: THREE.DoubleSide,
-    toneMapped: false
+    side: THREE.FrontSide,
+    toneMapped: false,
+    depthWrite: true
   });
 
   const stickerMesh = new THREE.Mesh(stickerGeo, stickerMat);
   stickerMesh.name = 'StickerFace';
   stickerMesh.castShadow = false;
   stickerMesh.receiveShadow = false;
-  stickerMesh.renderOrder = 3; // Renderiza acima do acrílico frontalmente
+  stickerMesh.renderOrder = 3; // Renderiza à frente da placa
 
   // Cálculo da posição central da face frontal:
   const midH = h / 2;
   const stickerX = 0;
   
-  // Normal da face inclinada: normalZ = cosT, normalY = sinT
-  // Posicionamos o adesivo imediatamente à frente do bisel frontal (bevel + 0.12mm)
+  // Posicionamos o adesivo imediatamente na superfície frontal
   const offsetFront = bevel + 0.12;
-  const stickerY = (cosT * midH) + (sinT * offsetFront) + 1.2;
+  const stickerY = (cosT * midH) + (sinT * offsetFront) + 0.6;
   const stickerZ = (-sinT * midH) + (cosT * offsetFront);
 
   stickerMesh.position.set(stickerX, stickerY, stickerZ);

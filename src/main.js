@@ -49,8 +49,9 @@ class PlaqueStudioApp {
   }
 
   bindStateEvents() {
-    // Atualização de arte quando QR Code ou Artwork mudam
+    // Atualização de arte quando QR Codes ou Artwork mudam
     stateManager.on('change:qrCode', () => this.debouncedUpdateArtwork());
+    stateManager.on('change:qrCode2', () => this.debouncedUpdateArtwork());
     stateManager.on('change:artwork', () => this.debouncedUpdateArtwork());
 
     // Atualização física quando dimensões mudam
@@ -89,63 +90,60 @@ class PlaqueStudioApp {
 
     // Callbacks quando o usuário interage diretamente com o mouse na placa 3D
     if (this.sceneManager) {
-      // Clique inicial na superfície 3D: seleciona QR Code ou Imagem automaticamente
+      // Clique inicial na superfície 3D: seleciona elemento clicado automaticamente
       this.sceneManager.onSurfaceDragStart((data) => {
-        const hitQR = this.controlsManager.isPointInQRCode(data.relX, data.relY);
-        this.controlsManager.setDragTarget(hitQR ? 'qr' : 'image');
+        const hit = this.controlsManager.getElementAtPoint(data.relX, data.relY);
+        if (hit) {
+          this.controlsManager.setActiveTarget(hit);
+        }
       });
 
       // Duplo clique na superfície 3D: centraliza o elemento clicado
       this.sceneManager.onSurfaceDblClick((data) => {
-        const hitQR = this.controlsManager.isPointInQRCode(data.relX, data.relY);
-        if (hitQR) {
-          this.controlsManager.setDragTarget('qr');
-          this.controlsManager.centerQRCode();
-        } else {
-          this.controlsManager.setDragTarget('image');
-          this.controlsManager.centerImage();
+        const hit = this.controlsManager.getElementAtPoint(data.relX, data.relY);
+        if (hit) {
+          this.controlsManager.setActiveTarget(hit);
+          this.controlsManager.centerCurrentSelection();
         }
       });
 
       // Arrastar na placa 3D com o mouse com snap magnético
       this.sceneManager.onSurfaceDrag((data) => {
-        const target = this.controlsManager.currentDragTarget;
-        if (target === 'qr') {
+        const target = this.controlsManager.activeTarget;
+        if (!target) return;
+
+        if (target === 'qr1') {
           const curX = stateManager.get('qrCode.posX') !== undefined ? stateManager.get('qrCode.posX') : 50;
           const curY = stateManager.get('qrCode.posY') !== undefined ? stateManager.get('qrCode.posY') : 68;
           let newX = curX + (data.deltaU * 100);
           let newY = curY - (data.deltaV * 100);
-
-          // Snap magnético suave ao centro (50%)
-          if (Math.abs(newX - 50) <= 2.5) newX = 50;
-          if (Math.abs(newY - 50) <= 2.5) newY = 50;
-
-          newX = Math.round(Math.min(85, Math.max(15, newX)));
-          newY = Math.round(Math.min(88, Math.max(15, newY)));
+          if (Math.abs(newX - 50) <= 2.2) newX = 50;
+          if (Math.abs(newY - 50) <= 2.2) newY = 50;
+          newX = Math.round(Math.min(92, Math.max(8, newX)));
+          newY = Math.round(Math.min(92, Math.max(8, newY)));
           stateManager.update('qrCode', { posX: newX, posY: newY });
-          this.controlsManager.syncQRSliders(newX, newY, null);
+        } else if (target === 'qr2') {
+          const curX = stateManager.get('qrCode2.posX') !== undefined ? stateManager.get('qrCode2.posX') : 72;
+          const curY = stateManager.get('qrCode2.posY') !== undefined ? stateManager.get('qrCode2.posY') : 68;
+          let newX = curX + (data.deltaU * 100);
+          let newY = curY - (data.deltaV * 100);
+          if (Math.abs(newX - 50) <= 2.2) newX = 50;
+          if (Math.abs(newY - 50) <= 2.2) newY = 50;
+          newX = Math.round(Math.min(92, Math.max(8, newX)));
+          newY = Math.round(Math.min(92, Math.max(8, newY)));
+          stateManager.update('qrCode2', { posX: newX, posY: newY });
         } else {
-          const curOffX = stateManager.get('artwork.imageOffsetX') || 0;
-          const curOffY = stateManager.get('artwork.imageOffsetY') || 0;
-          let newOffX = curOffX + (data.deltaU * 120);
-          let newOffY = curOffY - (data.deltaV * 120);
-
-          // Snap magnético suave ao centro (0)
-          if (Math.abs(newOffX) <= 3.5) newOffX = 0;
-          if (Math.abs(newOffY) <= 3.5) newOffY = 0;
-
-          newOffX = Math.round(Math.min(150, Math.max(-150, newOffX)));
-          newOffY = Math.round(Math.min(150, Math.max(-150, newOffY)));
-          stateManager.update('artwork', { imageOffsetX: newOffX, imageOffsetY: newOffY });
-          this.controlsManager.syncImageSliders(null, newOffX, newOffY);
+          const layer = (stateManager.get('artwork.layers') || []).find(l => l.id === target);
+          if (layer) {
+            let newX = (layer.x || 50) + (data.deltaU * 100);
+            let newY = (layer.y || 50) - (data.deltaV * 100);
+            if (Math.abs(newX - 50) <= 2.2) newX = 50;
+            if (Math.abs(newY - 50) <= 2.2) newY = 50;
+            newX = Math.round(Math.min(92, Math.max(8, newX)));
+            newY = Math.round(Math.min(92, Math.max(8, newY)));
+            stateManager.updateLayer(layer.id, { x: newX, y: newY });
+          }
         }
-      });
-
-      this.sceneManager.onSurfaceZoom((delta) => {
-        const curScale = stateManager.get('artwork.imageScale') || 1.0;
-        const newScale = Math.min(4.0, Math.max(0.2, Number((curScale + delta).toFixed(2))));
-        stateManager.set('artwork.imageScale', newScale);
-        this.controlsManager.syncImageSliders(newScale, null, null);
       });
     }
   }
@@ -173,17 +171,21 @@ class PlaqueStudioApp {
       const previewW = PRINT_SPEC.previewWidthPx;
       const previewH = Math.round((previewW * heightMm) / widthMm);
 
-      let qrCanvas = null;
-      const shouldRenderQR = state.artwork.mode === 'template_google' || 
-        (state.artwork.mode === 'custom_upload' && state.qrCode.showOnUpload !== false);
+      let qrCanvas1 = null;
+      let qrCanvas2 = null;
 
-      if (shouldRenderQR) {
-        qrCanvas = await qrGenerator.generateQRCode(state.qrCode, 700);
+      if (state.qrCode && state.qrCode.enabled !== false) {
+        qrCanvas1 = await qrGenerator.generateQRCode(state.qrCode, 700);
+      }
+
+      if (state.qrCode2 && state.qrCode2.enabled === true) {
+        qrCanvas2 = await qrGenerator.generateQRCode(state.qrCode2, 700);
       }
 
       this.currentArtworkCanvas = await artworkRenderer.renderArtwork(
         state.artwork,
-        qrCanvas,
+        qrCanvas1,
+        qrCanvas2,
         state.dimension,
         {
           widthPx: previewW,
@@ -191,7 +193,8 @@ class PlaqueStudioApp {
           dpi: 150,
           includeCropMarks: false
         },
-        state.qrCode
+        state.qrCode,
+        state.qrCode2
       );
 
       // Sincroniza textura com a placa 3D

@@ -17,18 +17,22 @@ export class ExportService {
     const widthPx = Math.round((widthMm / 25.4) * PRINT_SPEC.targetDpi);
     const heightPx = Math.round((heightMm / 25.4) * PRINT_SPEC.targetDpi);
 
-    // Gera o QR Code em resolução ultra-nítida para gráfica (1200x1200px)
-    let qrCanvas = null;
-    const shouldRenderQR = state.artwork.mode === 'template_google' || 
-      (state.artwork.mode === 'custom_upload' && state.qrCode.showOnUpload !== false);
+    // Gera os QR Codes em resolução ultra-nítida para gráfica (1200x1200px)
+    let qrCanvas1 = null;
+    let qrCanvas2 = null;
 
-    if (shouldRenderQR) {
-      qrCanvas = await qrGenerator.generateQRCode(state.qrCode, 1200);
+    if (state.qrCode && state.qrCode.enabled !== false) {
+      qrCanvas1 = await qrGenerator.generateQRCode(state.qrCode, 1200);
+    }
+
+    if (state.qrCode2 && state.qrCode2.enabled === true) {
+      qrCanvas2 = await qrGenerator.generateQRCode(state.qrCode2, 1200);
     }
 
     return await artworkRenderer.renderArtwork(
       state.artwork,
-      qrCanvas,
+      qrCanvas1,
+      qrCanvas2,
       state.dimension,
       {
         widthPx,
@@ -36,7 +40,8 @@ export class ExportService {
         dpi: PRINT_SPEC.targetDpi,
         includeCropMarks
       },
-      state.qrCode
+      state.qrCode,
+      state.qrCode2
     );
   }
 

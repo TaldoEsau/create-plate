@@ -7,7 +7,7 @@
   <meta name="description" content="Crie e personalize placas de acrílico de mesa com visualização 3D realista em tempo real e exportação em alta resolução (300 DPI) para impressão física.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=Montserrat:wght@400;600;700;800&family=Playfair+Display:wght@600;700&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/src/style.css">
 </head>
 <body class="dark-theme">
@@ -32,7 +32,7 @@
       <div class="nav-meta">
         <div class="spec-chip" id="spec-chip">
           <span class="chip-dot"></span>
-          <span id="spec-chip-text">110 x 150 mm • Acrílico Cristal 6mm</span>
+          <span id="spec-chip-text">110 x 150 mm • Acrílico Branco 6mm</span>
         </div>
         <div class="render-fps-badge" id="fps-badge">60 FPS</div>
       </div>
@@ -52,271 +52,353 @@
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
             <span>QR Code</span>
           </button>
-          <button type="button" class="tab-btn" id="tab-btn-dim" data-tab="tab-content-dim">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
-            <span>Dimensões</span>
-          </button>
         </div>
 
-        <!-- TAB 1: ARTE & TEMPLATE -->
+        <!-- TAB 1: ARTE & STUDIO CRIATIVO -->
         <section class="tab-panel active" id="tab-content-art">
+          <!-- MODELOS PRONTOS RÁPIDOS (1-CLIQUE) -->
           <div class="panel-section-header">
-            <h3>Modo de Composição</h3>
-            <span class="sub-hint">Escolha entre nosso modelo pronto ou envie sua arte completa</span>
+            <h3>Modelos & Estilos Prontos</h3>
+            <span class="sub-hint">Escolha um design base ou crie livremente do seu jeito</span>
           </div>
 
-          <!-- Selector: Template vs Upload -->
-          <div class="mode-selector-grid">
-            <label class="mode-card active" id="mode-card-template">
-              <input type="radio" name="artwork_mode" value="template_google" checked>
-              <div class="mode-card-icon">⭐</div>
-              <div class="mode-card-text">
-                <span class="mode-card-title">Avaliação Google</span>
-                <span class="mode-card-desc">5 estrelas, moldura e chamada</span>
+          <div class="template-presets-grid" id="template-presets-grid">
+            <button type="button" class="template-card-btn active" data-template-id="google_review">
+              <span class="tmpl-icon">⭐</span>
+              <div class="tmpl-info">
+                <span class="tmpl-title">Google Avaliações</span>
+                <span class="tmpl-desc">5 estrelas & moldura oficial</span>
               </div>
-            </label>
-
-            <label class="mode-card" id="mode-card-upload">
-              <input type="radio" name="artwork_mode" value="custom_upload">
-              <div class="mode-card-icon">🖼️</div>
-              <div class="mode-card-text">
-                <span class="mode-card-title">Subir Arte Pronta</span>
-                <span class="mode-card-desc">Upload de PNG/JPG próprio</span>
+            </button>
+            <button type="button" class="template-card-btn" data-template-id="duo_google_instagram">
+              <span class="tmpl-icon">🚀</span>
+              <div class="tmpl-info">
+                <span class="tmpl-title">Google + Instagram</span>
+                <span class="tmpl-desc">2 QR Codes lado a lado</span>
               </div>
-            </label>
+            </button>
+            <button type="button" class="template-card-btn" data-template-id="duo_insta_whatsapp">
+              <span class="tmpl-icon">💬</span>
+              <div class="tmpl-info">
+                <span class="tmpl-title">Instagram + WhatsApp</span>
+                <span class="tmpl-desc">2 QR Codes de atendimento</span>
+              </div>
+            </button>
+            <button type="button" class="template-card-btn" data-template-id="duo_wifi_pix">
+              <span class="tmpl-icon">📶</span>
+              <div class="tmpl-info">
+                <span class="tmpl-title">Wi-Fi + Chave PIX</span>
+                <span class="tmpl-desc">2 QR Codes para balcão</span>
+              </div>
+            </button>
+            <button type="button" class="template-card-btn" data-template-id="blank_canvas">
+              <span class="tmpl-icon">✨</span>
+              <div class="tmpl-info">
+                <span class="tmpl-title">Design em Branco</span>
+                <span class="tmpl-desc">Criação livre total do zero</span>
+              </div>
+            </button>
           </div>
 
-          <!-- SECTION: GOOGLE TEMPLATE FIELDS -->
-          <div class="editor-subgroup" id="group-template-fields">
+          <!-- BARRA DE FERRAMENTAS ESTILO PHOTOSHOP: ADICIONAR ELEMENTOS -->
+          <div class="studio-toolbar-box">
+            <div class="panel-section-header" style="margin-bottom: 0.6rem;">
+              <h4 style="font-size: 0.95rem; font-weight: 700;">Adicionar à Placa</h4>
+              <span class="sub-hint">Insira quantos elementos, fotos e textos quiser</span>
+            </div>
+
+            <div class="studio-add-buttons-grid">
+              <input type="file" id="input-multiple-images" accept="image/png, image/jpeg, image/webp, image/svg+xml" multiple hidden>
+              <button type="button" class="btn-studio-tool" id="btn-add-image" title="Adicionar imagens, fotos ou logos">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                <span>+ Imagem</span>
+              </button>
+
+              <button type="button" class="btn-studio-tool" id="btn-add-text" title="Adicionar caixa de texto">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg>
+                <span>+ Texto</span>
+              </button>
+
+              <button type="button" class="btn-studio-tool" id="btn-open-icons" title="Galeria de ícones (Instagram, WhatsApp, PIX, etc.)">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                <span>+ Ícone</span>
+              </button>
+
+              <button type="button" class="btn-studio-tool" id="btn-add-card" title="Adicionar base ou cartão decorativo">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="4"/></svg>
+                <span>+ Cartão</span>
+              </button>
+
+              <button type="button" class="btn-studio-tool" id="btn-toggle-bg-settings" title="Alterar cor ou fundo da placa">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 2a10 10 0 0 0 0 20z" fill="currentColor"/></svg>
+                <span>🎨 Fundo</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- GAVETA DE CONFIGURAÇÃO DO FUNDO DA PLACA (TOGGLE) -->
+          <div class="editor-subgroup hidden" id="bg-settings-drawer">
+            <div class="panel-section-header">
+              <h4 style="font-size: 0.95rem; font-weight: 700;">Cor & Fundo da Placa</h4>
+              <span class="sub-hint">Defina a cor base, degradê ou estampa de fundo</span>
+            </div>
+
+            <!-- Paleta de cores base -->
             <div class="input-group">
-              <label for="input-title-line1">Texto Superior</label>
-              <input type="text" id="input-title-line1" value="Nos avalie no" maxlength="35" placeholder="Ex: Nos avalie no">
+              <label>Cor Base da Placa</label>
+              <div class="color-selection-row">
+                <input type="color" id="input-bg-color" value="#ffffff" class="styled-color-picker">
+                <div class="preset-dots-wrap" id="preset-bg-dots">
+                  <button type="button" class="preset-dot active" style="background: #ffffff; border: 1px solid #cbd5e1;" data-bg="#ffffff" title="Branco"></button>
+                  <button type="button" class="preset-dot" style="background: #f8fafc;" data-bg="#f8fafc" title="Cinza Suave"></button>
+                  <button type="button" class="preset-dot" style="background: #0f172a;" data-bg="#0f172a" title="Dark Luxo"></button>
+                  <button type="button" class="preset-dot" style="background: #1e1b4b;" data-bg="#1e1b4b" title="Azul Profundo"></button>
+                  <button type="button" class="preset-dot" style="background: #fdf2f8;" data-bg="#fdf2f8" title="Rosa Pastel"></button>
+                  <button type="button" class="preset-dot" style="background: #fefce8;" data-bg="#fefce8" title="Dourado Suave"></button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Presets de Gradiente -->
+            <div class="input-group">
+              <label>Degradês Modernos</label>
+              <div class="gradient-presets-flex">
+                <button type="button" class="btn-grad-preset" data-grad="none">Nenhum (Sólido)</button>
+                <button type="button" class="btn-grad-preset" data-grad="insta" style="background: linear-gradient(135deg, #833ab4, #fd1d1d, #fcb045);">Sunset</button>
+                <button type="button" class="btn-grad-preset" data-grad="neon" style="background: linear-gradient(135deg, #4f46e5, #06b6d4);">Ocean</button>
+                <button type="button" class="btn-grad-preset" data-grad="dark" style="background: linear-gradient(135deg, #0f172a, #334155);">Dark Tech</button>
+                <button type="button" class="btn-grad-preset" data-grad="gold" style="background: linear-gradient(135deg, #f59e0b, #d97706);">Gold</button>
+              </div>
+            </div>
+
+            <!-- Imagem de Fundo Completa -->
+            <div class="input-group" style="margin-top: 0.5rem;">
+              <label>Imagem de Fundo Própria</label>
+              <input type="file" id="input-bg-image-file" accept="image/*" hidden>
+              <button type="button" class="btn-outline-small" id="btn-select-bg-img" style="width: 100%;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                <span>Upload de Imagem de Fundo</span>
+              </button>
+              <button type="button" class="btn-text-danger hidden" id="btn-remove-bg-img" style="margin-top: 6px;">Remover imagem de fundo</button>
+            </div>
+          </div>
+
+          <!-- PAINEL DO ELEMENTO SELECIONADO (INSPECTOR DE PROPRIEDADES) -->
+          <div class="inspector-card" id="selected-element-inspector">
+            <div class="inspector-header">
+              <div class="inspector-badge" id="inspector-element-type-badge">
+                <span id="inspector-badge-icon">✏️</span>
+                <span id="inspector-badge-title">Elemento Selecionado</span>
+              </div>
+              <div class="inspector-actions-row">
+                <button type="button" class="btn-micro-tool" id="btn-layer-front" title="Trazer para a Frente (Por Cima de Todos)">🔝</button>
+                <button type="button" class="btn-micro-tool" id="btn-layer-up" title="Subir uma camada">⬆️</button>
+                <button type="button" class="btn-micro-tool" id="btn-layer-down" title="Descer uma camada">⬇️</button>
+                <button type="button" class="btn-micro-tool" id="btn-layer-back" title="Enviar para Trás (Por Baixo de Todos)">🔻</button>
+                <button type="button" class="btn-micro-tool" id="btn-layer-dup" title="Duplicar elemento">📋</button>
+                <button type="button" class="btn-micro-tool btn-danger-tool" id="btn-layer-del" title="Excluir elemento">🗑️</button>
+              </div>
+            </div>
+
+            <!-- Campos Dinâmicos do Elemento Selecionado -->
+            <div id="inspector-fields-container" class="inspector-fields-container">
+              <!-- Conteúdo inserido dinamicamente via ControlsManager -->
+              <p class="inspector-empty-hint">Clique em qualquer elemento na placa para editar suas propriedades ao vivo.</p>
+            </div>
+          </div>
+
+          <!-- PILHA DE CAMADAS (LAYERS STACK) -->
+          <div class="layers-stack-box">
+            <div class="panel-section-header" style="margin-bottom: 0.6rem;">
+              <h4 style="font-size: 0.95rem; font-weight: 700;">Camadas da Placa</h4>
+              <span class="sub-hint">Clique para selecionar ou reordenar</span>
+            </div>
+            <div class="layers-list-wrap" id="layers-list-wrap">
+              <!-- Lista de camadas renderizada via JS -->
+            </div>
+          </div>
+
+          <!-- Banner para Baixar Gabarito Oficial (300 DPI) -->
+          <div class="template-download-banner" style="margin-top: 1rem;">
+            <div class="banner-icon">📐</div>
+            <div class="banner-info">
+              <span class="banner-title">Gabarito Oficial em 300 DPI</span>
+              <span class="banner-desc">Baixe o molde em escala real (110 × 150 mm) para abrir no Photoshop ou CorelDraw.</span>
+            </div>
+            <button type="button" class="btn-download-template" id="btn-download-template">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              <span>Baixar Gabarito (300 DPI)</span>
+            </button>
+          </div>
+        </section>
+
+        <!-- TAB 2: QR CODES (SUPORTE A ATÉ 2 QR CODES) -->
+        <section class="tab-panel" id="tab-content-qr">
+          <div class="panel-section-header">
+            <h3>QR Codes na Placa</h3>
+            <span class="sub-hint">Configure links, cores, logos centrais e use até 2 QR Codes simultâneos</span>
+          </div>
+
+          <!-- SUB-ABAS / SELETOR DE QR CODES: QR 1 vs QR 2 -->
+          <div class="qr-switcher-pills">
+            <button type="button" class="qr-pill-btn active" id="pill-select-qr1" data-qr-target="qr1">
+              <span>📱 QR Code 1 (Principal)</span>
+            </button>
+            <button type="button" class="qr-pill-btn" id="pill-select-qr2" data-qr-target="qr2">
+              <span>📱 QR Code 2 <b id="qr2-active-badge" class="badge-mini-active hidden">ATIVO</b></span>
+            </button>
+          </div>
+
+          <!-- CARD DE ATIVAÇÃO DO 2º QR CODE -->
+          <div class="dual-qr-card-toggle">
+            <div class="toggle-group" style="padding: 0; background: transparent; border: none;">
+              <div class="toggle-label-wrap">
+                <label for="toggle-enable-qr2"><b>Ativar 2º QR Code na Placa</b></label>
+                <span class="field-hint">Adiciona um segundo código (ex: Instagram + Avaliação, Wi-Fi + Pix)</span>
+              </div>
+              <label class="switch">
+                <input type="checkbox" id="toggle-enable-qr2">
+                <span class="slider round"></span>
+              </label>
+            </div>
+
+            <!-- Presets de Layout para 2 QR Codes -->
+            <div class="dual-qr-presets-wrap hidden" id="dual-qr-presets-wrap">
+              <span class="sub-label-strong">Posições Rápidas para 2 QR Codes:</span>
+              <div class="dual-presets-grid">
+                <button type="button" class="btn-dual-preset active" id="btn-dual-pos-side">
+                  <span>↔️ Lado a Lado (Inferior)</span>
+                </button>
+                <button type="button" class="btn-dual-preset" id="btn-dual-pos-center">
+                  <span>🎯 Lado a Lado (Centro)</span>
+                </button>
+                <button type="button" class="btn-dual-preset" id="btn-dual-pos-stacked">
+                  <span>↕️ Empilhados (Vertical)</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- ================= SEÇÃO: QR CODE 1 ================= -->
+          <div class="qr-config-section" id="section-qr1-controls">
+            <div class="subgroup-title-flex">
+              <span class="section-tag-badge">QR Code 1</span>
+              <span class="sub-hint">Principal • Avaliação, Instagram, PIX, etc.</span>
+            </div>
+
+            <!-- Presets Rápidos de Destino para QR 1 -->
+            <div class="input-group">
+              <label>Tipo Rápido de Conteúdo</label>
+              <div class="quick-qr-types-grid">
+                <button type="button" class="btn-qr-type-chip active" data-target-qr="1" data-type="google">⭐ Google</button>
+                <button type="button" class="btn-qr-type-chip" data-target-qr="1" data-type="instagram">📸 Instagram</button>
+                <button type="button" class="btn-qr-type-chip" data-target-qr="1" data-type="whatsapp">💬 WhatsApp</button>
+                <button type="button" class="btn-qr-type-chip" data-target-qr="1" data-type="pix">⚡ PIX</button>
+                <button type="button" class="btn-qr-type-chip" data-target-qr="1" data-type="wifi">📶 Wi-Fi</button>
+                <button type="button" class="btn-qr-type-chip" data-target-qr="1" data-type="site">🌐 Site</button>
+              </div>
             </div>
 
             <div class="input-group">
-              <label for="input-title-brand">Destaque / Marca</label>
-              <input type="text" id="input-title-brand" value="Google" maxlength="30" placeholder="Ex: Google">
-              <span class="field-hint">Renderizado com a tipografia e cores oficiais Google</span>
+              <label for="input-qr-url">Link de Destino / URL <span class="req">*</span></label>
+              <div class="input-icon-wrap">
+                <svg class="input-prefix-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+                <input type="text" id="input-qr-url" value="https://google.com" placeholder="https://g.page/r/sua-empresa/review">
+              </div>
             </div>
 
             <div class="input-group">
-              <label for="input-footer-text">Chamada Inferior (Rodapé)</label>
-              <input type="text" id="input-footer-text" value="APONTE A CÂMERA E AVALIE!" maxlength="45" placeholder="Ex: APONTE A CÂMERA E AVALIE!">
+              <label for="input-qr-label">Rótulo / Texto Abaixo do QR 1</label>
+              <input type="text" id="input-qr-label" value="Avalie no Google" placeholder="Ex: Avalie no Google">
+            </div>
+
+            <!-- Logo Central Selector QR 1 -->
+            <div class="input-group">
+              <label>Logotipo no Centro</label>
+              <div class="logo-selector-grid">
+                <label class="logo-pill-card active" id="pill-logo-google">
+                  <input type="radio" name="qr_logo_choice" value="google" checked>
+                  <img src="/assets/google-logo.svg" alt="Google" width="20" height="20">
+                  <span>Google</span>
+                </label>
+                <label class="logo-pill-card" id="pill-logo-insta">
+                  <input type="radio" name="qr_logo_choice" value="instagram">
+                  <span class="emoji-logo">📸</span>
+                  <span>Instagram</span>
+                </label>
+                <label class="logo-pill-card" id="pill-logo-whats">
+                  <input type="radio" name="qr_logo_choice" value="whatsapp">
+                  <span class="emoji-logo">💬</span>
+                  <span>WhatsApp</span>
+                </label>
+                <label class="logo-pill-card" id="pill-logo-pix">
+                  <input type="radio" name="qr_logo_choice" value="pix">
+                  <span class="emoji-logo">⚡</span>
+                  <span>PIX</span>
+                </label>
+                <label class="logo-pill-card" id="pill-logo-custom">
+                  <input type="radio" name="qr_logo_choice" value="custom">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                  <span>Sua Logo</span>
+                </label>
+                <label class="logo-pill-card" id="pill-logo-none">
+                  <input type="radio" name="qr_logo_choice" value="none">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>
+                  <span>Sem Logo</span>
+                </label>
+              </div>
+
+              <!-- Upload da Logo Própria -->
+              <div class="custom-logo-upload-wrap hidden" id="custom-logo-upload-wrap">
+                <input type="file" id="input-custom-logo-file" accept="image/png, image/jpeg, image/webp" hidden>
+                <div class="logo-mini-dropzone" id="logo-mini-dropzone">
+                  <span id="logo-mini-text">Clique para enviar logo em PNG transparente</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- QR Foreground Color & Style -->
+            <div class="input-group">
+              <label for="input-qr-color">Cor dos Módulos</label>
+              <div class="color-selection-row">
+                <input type="color" id="input-qr-color" value="#000000" class="styled-color-picker">
+                <div class="preset-dots-wrap" id="preset-dots-wrap">
+                  <button type="button" class="preset-dot active" style="background: #000000;" data-color="#000000" title="Preto"></button>
+                  <button type="button" class="preset-dot" style="background: #1a73e8;" data-color="#1a73e8" title="Azul Google"></button>
+                  <button type="button" class="preset-dot" style="background: #e1306c;" data-color="#e1306c" title="Rosa Insta"></button>
+                  <button type="button" class="preset-dot" style="background: #25d366;" data-color="#25d366" title="Verde Whats"></button>
+                  <button type="button" class="preset-dot" style="background: #00bdae;" data-color="#00bdae" title="Verde PIX"></button>
+                  <button type="button" class="preset-dot" style="background: #0f172a;" data-color="#0f172a" title="Azul Marinho"></button>
+                </div>
+              </div>
             </div>
 
             <div class="toggle-group">
               <div class="toggle-label-wrap">
-                <label for="toggle-google-frame">Moldura Multicolorida Google</label>
-                <span class="field-hint">Borda estilizada com amarelo, vermelho, azul e verde</span>
+                <label for="toggle-qr-rounded">Cantos Arredondados nos Módulos</label>
+                <span class="field-hint">Visual moderno, suave e estilizado</span>
               </div>
               <label class="switch">
-                <input type="checkbox" id="toggle-google-frame" checked>
-                <span class="slider round"></span>
-              </label>
-            </div>
-          </div>
-
-          <!-- SECTION: CUSTOM ARTWORK UPLOAD -->
-          <div class="editor-subgroup hidden" id="group-upload-fields">
-            <!-- Box de Download do Gabarito Oficial -->
-            <div class="template-download-banner">
-              <div class="banner-icon">📐</div>
-              <div class="banner-info">
-                <span class="banner-title">Precisa do gabarito para criar sua arte?</span>
-                <span class="banner-desc">Baixe o molde oficial nas dimensões exatas da placa (110 × 150 mm) a 300 DPI com margem de segurança.</span>
-              </div>
-              <button type="button" class="btn-download-template" id="btn-download-template">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                <span>Baixar Gabarito (300 DPI)</span>
-              </button>
-            </div>
-
-            <div class="upload-dropzone" id="artwork-dropzone">
-              <input type="file" id="artwork-file-input" accept="image/png, image/jpeg, image/webp" hidden>
-              <div class="dropzone-content" id="dropzone-empty-content">
-                <div class="dropzone-icon">
-                  <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-                </div>
-                <span class="dropzone-title">Arraste sua arte pronta aqui</span>
-                <span class="dropzone-sub">ou clique para selecionar arquivo</span>
-                <span class="dropzone-badge">Recomendado: 110 × 150 mm (1299 × 1772 px)</span>
-              </div>
-
-              <div class="dropzone-preview hidden" id="dropzone-preview-wrap">
-                <img id="artwork-preview-thumb" src="" alt="Prévia da arte enviada">
-                <div class="preview-meta">
-                  <span id="artwork-file-name" class="meta-filename"></span>
-                  <span id="artwork-file-res" class="meta-resolution">Carregado com sucesso</span>
-                </div>
-                <button type="button" class="btn-icon-danger" id="btn-remove-artwork" title="Remover arte">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-                </button>
-              </div>
-            </div>
-
-            <!-- Painel de Encaixe e Centralização da Imagem -->
-            <div class="upload-adjustments-card" id="upload-adjustments-card">
-              <div class="panel-section-header" style="margin-bottom: 0.75rem;">
-                <h4 style="font-size: 0.95rem; font-weight: 700;">Ajuste e Encaixe no Modelo 3D</h4>
-                <span class="sub-hint">Mova, ajuste o zoom ou centralize sua imagem</span>
-              </div>
-
-              <div class="input-group">
-                <label for="select-fit-mode">Modo de Enquadramento</label>
-                <select id="select-fit-mode" class="styled-select">
-                  <option value="cover" selected>Preencher Área Total (Cover)</option>
-                  <option value="contain">Conter Proporção Original (Contain)</option>
-                </select>
-              </div>
-
-              <div class="slider-row">
-                <div class="slider-header-flex">
-                  <label for="range-img-scale">Zoom / Escala da Imagem</label>
-                  <div class="stepper-wrap">
-                    <button type="button" class="btn-step-sm" id="btn-step-img-minus" title="Diminuir imagem (➖)">−</button>
-                    <span class="slider-val-badge" id="label-img-scale">100%</span>
-                    <button type="button" class="btn-step-sm" id="btn-step-img-plus" title="Aumentar imagem (➕)">+</button>
-                  </div>
-                </div>
-                <input type="range" id="range-img-scale" min="20" max="400" value="100" step="2" class="styled-range">
-              </div>
-
-              <div class="slider-row">
-                <div class="slider-header-flex">
-                  <label for="range-img-offset-x">Posição Horizontal (X)</label>
-                  <span class="slider-val-badge" id="label-img-offset-x">0%</span>
-                </div>
-                <input type="range" id="range-img-offset-x" min="-150" max="150" value="0" step="1" class="styled-range">
-              </div>
-
-              <div class="slider-row">
-                <div class="slider-header-flex">
-                  <label for="range-img-offset-y">Posição Vertical (Y)</label>
-                  <span class="slider-val-badge" id="label-img-offset-y">0%</span>
-                </div>
-                <input type="range" id="range-img-offset-y" min="-150" max="150" value="0" step="1" class="styled-range">
-              </div>
-
-              <button type="button" class="btn-center-image" id="btn-center-image">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="22" y1="12" x2="18" y2="12"/><line x1="6" y1="12" x2="2" y2="12"/><line x1="12" y1="6" x2="12" y2="2"/><line x1="12" y1="22" x2="12" y2="18"/></svg>
-                <span>Centralizar Imagem no Modelo 3D</span>
-              </button>
-            </div>
-          </div>
-        </section>
-
-        <!-- TAB 2: QR CODE -->
-        <section class="tab-panel" id="tab-content-qr">
-          <div class="panel-section-header">
-            <h3>Personalização do QR Code</h3>
-            <span class="sub-hint">Defina o destino e estilize módulos, cores e logo central</span>
-          </div>
-
-          <div class="input-group">
-            <label for="input-qr-url">Link de Destino / URL <span class="req">*</span></label>
-            <div class="input-icon-wrap">
-              <svg class="input-prefix-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-              <input type="text" id="input-qr-url" value="https://google.com" placeholder="https://g.page/r/sua-empresa/review">
-            </div>
-            <span class="field-hint">Cole o link da sua página de avaliação, Instagram ou site</span>
-          </div>
-
-          <!-- Logo Central Selector -->
-          <div class="input-group">
-            <label>Logotipo no Centro do QR Code</label>
-            <div class="logo-selector-grid">
-              <label class="logo-pill-card active" id="pill-logo-google">
-                <input type="radio" name="qr_logo_choice" value="google" checked>
-                <img src="/assets/google-logo.svg" alt="Google" width="20" height="20">
-                <span>Google</span>
-              </label>
-              <label class="logo-pill-card" id="pill-logo-custom">
-                <input type="radio" name="qr_logo_choice" value="custom">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-                <span>Sua Logo</span>
-              </label>
-              <label class="logo-pill-card" id="pill-logo-none">
-                <input type="radio" name="qr_logo_choice" value="none">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>
-                <span>Sem Logo</span>
-              </label>
-            </div>
-
-            <!-- Upload da Logo Própria -->
-            <div class="custom-logo-upload-wrap hidden" id="custom-logo-upload-wrap">
-              <input type="file" id="input-custom-logo-file" accept="image/png, image/jpeg, image/webp" hidden>
-              <div class="logo-mini-dropzone" id="logo-mini-dropzone">
-                <span id="logo-mini-text">Clique para enviar logo em PNG transparente</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- QR Modules Style -->
-          <div class="toggle-group">
-            <div class="toggle-label-wrap">
-              <label for="toggle-qr-rounded">Cantos Arredondados nos Módulos</label>
-              <span class="field-hint">Visual moderno, suave e estilizado</span>
-            </div>
-            <label class="switch">
-              <input type="checkbox" id="toggle-qr-rounded" checked>
-              <span class="slider round"></span>
-            </label>
-          </div>
-
-          <!-- QR Foreground Color -->
-          <div class="input-group">
-            <label for="input-qr-color">Cor dos Módulos do QR Code</label>
-            <div class="color-selection-row">
-              <input type="color" id="input-qr-color" value="#000000" class="styled-color-picker">
-              <div class="preset-dots-wrap" id="preset-dots-wrap">
-                <button type="button" class="preset-dot active" style="background: #000000;" data-color="#000000" title="Preto"></button>
-                <button type="button" class="preset-dot" style="background: #1a73e8;" data-color="#1a73e8" title="Azul Google"></button>
-                <button type="button" class="preset-dot" style="background: #1e8e3e;" data-color="#1e8e3e" title="Verde Google"></button>
-                <button type="button" class="preset-dot" style="background: #d93025;" data-color="#d93025" title="Vermelho Google"></button>
-                <button type="button" class="preset-dot" style="background: #f29900;" data-color="#f29900" title="Amarelo Google"></button>
-                <button type="button" class="preset-dot" style="background: #0f172a;" data-color="#0f172a" title="Azul Marinho"></button>
-              </div>
-            </div>
-          </div>
-
-          <!-- NOVO: POSICIONAMENTO LIVRE DO QR CODE NA PLACA -->
-          <div class="editor-subgroup" style="margin-top: 1.5rem; border-top: 1px solid var(--border-glass); padding-top: 1.25rem;">
-            <div class="panel-section-header">
-              <h3 style="font-size: 1.05rem;">Posição do QR Code na Placa</h3>
-              <span class="sub-hint">Mova e redimensione o QR Code livremente sobre sua arte</span>
-            </div>
-
-            <!-- Toggle sobre a arte enviada -->
-            <div class="toggle-group" style="margin-bottom: 1rem;">
-              <div class="toggle-label-wrap">
-                <label for="toggle-qr-overlay">Exibir QR Code sobre a Arte Enviada</label>
-                <span class="field-hint">Permite estampar o QR Code sobre a imagem que você subiu</span>
-              </div>
-              <label class="switch">
-                <input type="checkbox" id="toggle-qr-overlay" checked>
+                <input type="checkbox" id="toggle-qr-rounded" checked>
                 <span class="slider round"></span>
               </label>
             </div>
 
-            <!-- Presets Rápidos de Posição -->
-            <div class="input-group">
-              <label>Posições Rápidas</label>
-              <div class="placement-presets-grid">
-                <button type="button" class="btn-preset-pos" data-pos-x="50" data-pos-y="25">Superior</button>
-                <button type="button" class="btn-preset-pos" data-pos-x="50" data-pos-y="50">Centro</button>
-                <button type="button" class="btn-preset-pos active" data-pos-x="50" data-pos-y="68">Inferior</button>
-                <button type="button" class="btn-preset-pos" data-pos-x="76" data-pos-y="78">Canto Dir.</button>
-                <button type="button" class="btn-preset-pos" data-pos-x="24" data-pos-y="78">Canto Esq.</button>
+            <!-- Posição e Tamanho QR 1 -->
+            <div class="slider-row">
+              <div class="slider-header-flex">
+                <label for="range-qr-size">Tamanho do QR 1</label>
+                <span class="slider-val-badge" id="label-qr-size">42%</span>
               </div>
+              <input type="range" id="range-qr-size" min="15" max="85" value="42" step="1" class="styled-range">
             </div>
 
-            <!-- Sliders de Posição X e Y -->
             <div class="slider-row">
               <div class="slider-header-flex">
                 <label for="range-qr-pos-x">Posição Horizontal (X)</label>
                 <span class="slider-val-badge" id="label-qr-pos-x">50%</span>
               </div>
-              <input type="range" id="range-qr-pos-x" min="15" max="85" value="50" step="1" class="styled-range">
+              <input type="range" id="range-qr-pos-x" min="10" max="90" value="50" step="1" class="styled-range">
             </div>
 
             <div class="slider-row">
@@ -324,42 +406,130 @@
                 <label for="range-qr-pos-y">Posição Vertical (Y)</label>
                 <span class="slider-val-badge" id="label-qr-pos-y">68%</span>
               </div>
-              <input type="range" id="range-qr-pos-y" min="15" max="88" value="68" step="1" class="styled-range">
+              <input type="range" id="range-qr-pos-y" min="10" max="90" value="68" step="1" class="styled-range">
             </div>
 
-            <!-- Slider de Tamanho do QR Code -->
-            <div class="slider-row">
-              <div class="slider-header-flex">
-                <label for="range-qr-size">Tamanho do QR Code</label>
-                <div class="stepper-wrap">
-                  <button type="button" class="btn-step-sm" id="btn-step-qr-minus" title="Diminuir QR Code (➖)">−</button>
-                  <span class="slider-val-badge" id="label-qr-size">42%</span>
-                  <button type="button" class="btn-step-sm" id="btn-step-qr-plus" title="Aumentar QR Code (➕)">+</button>
-                </div>
-              </div>
-              <input type="range" id="range-qr-size" min="15" max="85" value="42" step="1" class="styled-range">
-            </div>
-
-            <!-- Toggle Cartão Branco de Destaque -->
-            <div class="toggle-group" style="margin-top: 0.75rem;">
+            <div class="toggle-group">
               <div class="toggle-label-wrap">
                 <label for="toggle-qr-card-bg">Fundo Branco de Destaque</label>
-                <span class="field-hint">Adiciona base branca com cantos arredondados para contraste perfeito</span>
+                <span class="field-hint">Garante leitura perfeita do QR Code</span>
               </div>
               <label class="switch">
                 <input type="checkbox" id="toggle-qr-card-bg" checked>
                 <span class="slider round"></span>
               </label>
             </div>
+          </div>
 
-            <button type="button" class="btn-center-image" id="btn-center-qr" style="margin-top: 12px;">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="22" y1="12" x2="18" y2="12"/><line x1="6" y1="12" x2="2" y2="12"/><line x1="12" y1="6" x2="12" y2="2"/><line x1="12" y1="22" x2="12" y2="18"/></svg>
-              <span>Centralizar QR Code na Placa</span>
-            </button>
+          <!-- ================= SEÇÃO: QR CODE 2 ================= -->
+          <div class="qr-config-section hidden" id="section-qr2-controls">
+            <div class="subgroup-title-flex">
+              <span class="section-tag-badge" style="background: rgba(225, 48, 108, 0.15); color: #f43f5e; border-color: rgba(225, 48, 108, 0.3);">QR Code 2</span>
+              <span class="sub-hint">Segundo Link • Instagram, WhatsApp, PIX, etc.</span>
+            </div>
+
+            <!-- Presets Rápidos de Destino para QR 2 -->
+            <div class="input-group">
+              <label>Tipo Rápido de Conteúdo</label>
+              <div class="quick-qr-types-grid">
+                <button type="button" class="btn-qr-type-chip active" data-target-qr="2" data-type="instagram">📸 Instagram</button>
+                <button type="button" class="btn-qr-type-chip" data-target-qr="2" data-type="whatsapp">💬 WhatsApp</button>
+                <button type="button" class="btn-qr-type-chip" data-target-qr="2" data-type="pix">⚡ PIX</button>
+                <button type="button" class="btn-qr-type-chip" data-target-qr="2" data-type="wifi">📶 Wi-Fi</button>
+                <button type="button" class="btn-qr-type-chip" data-target-qr="2" data-type="google">⭐ Google</button>
+                <button type="button" class="btn-qr-type-chip" data-target-qr="2" data-type="site">🌐 Site</button>
+              </div>
+            </div>
+
+            <div class="input-group">
+              <label for="input-qr2-url">Link de Destino / URL do 2º QR <span class="req">*</span></label>
+              <div class="input-icon-wrap">
+                <svg class="input-prefix-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+                <input type="text" id="input-qr2-url" value="https://instagram.com" placeholder="https://instagram.com/seu.perfil">
+              </div>
+            </div>
+
+            <div class="input-group">
+              <label for="input-qr2-label">Rótulo / Texto Abaixo do QR 2</label>
+              <input type="text" id="input-qr2-label" value="Siga no Instagram" placeholder="Ex: Siga no Instagram">
+            </div>
+
+            <!-- Logo Central Selector QR 2 -->
+            <div class="input-group">
+              <label>Logotipo no Centro do QR 2</label>
+              <div class="logo-selector-grid">
+                <label class="logo-pill-card active" id="pill-logo2-insta">
+                  <input type="radio" name="qr2_logo_choice" value="instagram" checked>
+                  <span class="emoji-logo">📸</span>
+                  <span>Instagram</span>
+                </label>
+                <label class="logo-pill-card" id="pill-logo2-whats">
+                  <input type="radio" name="qr2_logo_choice" value="whatsapp">
+                  <span class="emoji-logo">💬</span>
+                  <span>WhatsApp</span>
+                </label>
+                <label class="logo-pill-card" id="pill-logo2-pix">
+                  <input type="radio" name="qr2_logo_choice" value="pix">
+                  <span class="emoji-logo">⚡</span>
+                  <span>PIX</span>
+                </label>
+                <label class="logo-pill-card" id="pill-logo2-google">
+                  <input type="radio" name="qr2_logo_choice" value="google">
+                  <img src="/assets/google-logo.svg" alt="Google" width="20" height="20">
+                  <span>Google</span>
+                </label>
+                <label class="logo-pill-card" id="pill-logo2-none">
+                  <input type="radio" name="qr2_logo_choice" value="none">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>
+                  <span>Sem Logo</span>
+                </label>
+              </div>
+            </div>
+
+            <!-- Cor QR 2 -->
+            <div class="input-group">
+              <label for="input-qr2-color">Cor dos Módulos do QR 2</label>
+              <div class="color-selection-row">
+                <input type="color" id="input-qr2-color" value="#000000" class="styled-color-picker">
+                <div class="preset-dots-wrap" id="preset-dots-wrap2">
+                  <button type="button" class="preset-dot active" style="background: #000000;" data-color="#000000" title="Preto"></button>
+                  <button type="button" class="preset-dot" style="background: #e1306c;" data-color="#e1306c" title="Rosa Insta"></button>
+                  <button type="button" class="preset-dot" style="background: #25d366;" data-color="#25d366" title="Verde Whats"></button>
+                  <button type="button" class="preset-dot" style="background: #00bdae;" data-color="#00bdae" title="Verde PIX"></button>
+                  <button type="button" class="preset-dot" style="background: #1a73e8;" data-color="#1a73e8" title="Azul Google"></button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Posição e Tamanho QR 2 -->
+            <div class="slider-row">
+              <div class="slider-header-flex">
+                <label for="range-qr2-size">Tamanho do QR 2</label>
+                <span class="slider-val-badge" id="label-qr2-size">32%</span>
+              </div>
+              <input type="range" id="range-qr2-size" min="15" max="85" value="32" step="1" class="styled-range">
+            </div>
+
+            <div class="slider-row">
+              <div class="slider-header-flex">
+                <label for="range-qr2-pos-x">Posição Horizontal (X)</label>
+                <span class="slider-val-badge" id="label-qr2-pos-x">72%</span>
+              </div>
+              <input type="range" id="range-qr2-pos-x" min="10" max="90" value="72" step="1" class="styled-range">
+            </div>
+
+            <div class="slider-row">
+              <div class="slider-header-flex">
+                <label for="range-qr2-pos-y">Posição Vertical (Y)</label>
+                <span class="slider-val-badge" id="label-qr2-pos-y">68%</span>
+              </div>
+              <input type="range" id="range-qr2-pos-y" min="10" max="90" value="68" step="1" class="styled-range">
+            </div>
           </div>
         </section>
 
-        <!-- TAB 3: DIMENSÕES -->
+        <!-- TAB 3: DIMENSÕES (Ocultada: padrão fixo de produção 11 x 15 cm) -->
+        <!--
         <section class="tab-panel" id="tab-content-dim">
           <div class="panel-section-header">
             <h3>Formato Físico do Suporte</h3>
@@ -393,6 +563,7 @@
             <span>Baixar Gabarito da Placa (300 DPI)</span>
           </button>
         </section>
+        -->
       </aside>
 
       <!-- Center & Right: 3D Scene Viewport & Export Output -->
@@ -407,24 +578,34 @@
             <!-- Barra de Modos de Arrastar com Mouse no 2D -->
             <div class="canvas-2d-action-bar">
               <div class="canvas-2d-mode-toggles">
-                <button type="button" class="mode-chip-btn active" id="btn-2d-drag-img" title="Selecionar Imagem de Fundo para mover ou redimensionar">
-                  <span>🖼️ Imagem</span>
+                <button type="button" class="mode-chip-btn active" id="btn-2d-drag-img" title="Selecionar Imagem ou Camada para editar">
+                  <span>🖼️ Imagem / Camada</span>
                 </button>
-                <button type="button" class="mode-chip-btn" id="btn-2d-drag-qr" title="Selecionar QR Code para mover ou redimensionar">
+                <button type="button" class="mode-chip-btn" id="btn-2d-drag-qr" title="Selecionar QR Code para editar">
                   <span>📱 QR Code</span>
                 </button>
+                <div class="canvas-action-separator"></div>
                 <button type="button" class="mode-chip-btn btn-scale-step" id="btn-scale-down" title="Diminuir tamanho do elemento selecionado (➖)">
                   <span>➖ Diminuir</span>
                 </button>
                 <button type="button" class="mode-chip-btn btn-scale-step" id="btn-scale-up" title="Aumentar tamanho do elemento selecionado (➕)">
                   <span>➕ Aumentar</span>
                 </button>
-                <button type="button" class="mode-chip-btn btn-chip-center" id="btn-2d-center-current" title="Centralizar o elemento selecionado no meio da placa (ou dê Duplo Clique)">
+                <button type="button" class="mode-chip-btn btn-chip-center" id="btn-2d-center-current" title="Centralizar o elemento selecionado no meio da placa">
                   <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="22" y1="12" x2="18" y2="12"/><line x1="6" y1="12" x2="2" y2="12"/><line x1="12" y1="6" x2="12" y2="2"/><line x1="12" y1="22" x2="12" y2="18"/></svg>
                   <span>🎯 Centralizar</span>
                 </button>
+                <div class="canvas-action-separator"></div>
+                <button type="button" class="mode-chip-btn" id="btn-2d-bring-front" title="Colocar objeto por cima de todos os outros (Trazer para a Frente)">
+                  <span>🔝 Deixar por Cima</span>
+                </button>
+                <button type="button" class="mode-chip-btn" id="btn-2d-send-back" title="Colocar objeto por trás de todos os outros (Enviar para Trás)">
+                  <span>🔽 Deixar por Trás</span>
+                </button>
               </div>
-              <span class="canvas-2d-tip">💡 <b>Arraste as alças na borda</b> para aumentar/diminuir • <b>Arraste o meio</b> para mover • <b>Duplo clique</b> centraliza</span>
+              <div class="canvas-2d-tip">
+                💡 <b>Botão direito:</b> menu de ordem das camadas • <b>Alças:</b> redimensionar • <b>Centro:</b> arrastar
+              </div>
             </div>
 
             <div class="preview-paper-card">
@@ -546,6 +727,71 @@
         </footer>
       </section>
     </main>
+  </div>
+
+  <!-- MODAL: BIBLIOTECA DE ÍCONES VETORIAIS (INSTAGRAM, WHATSAPP, PIX, ETC.) -->
+  <div class="modal-backdrop hidden" id="modal-icon-library">
+    <div class="modal-card glass-panel">
+      <div class="modal-header">
+        <div class="modal-title-wrap">
+          <span class="modal-icon">🎨</span>
+          <div>
+            <h3 class="modal-title">Biblioteca de Ícones</h3>
+            <span class="modal-sub">Escolha um ícone para estampar na sua placa</span>
+          </div>
+        </div>
+        <button type="button" class="btn-close-modal" id="btn-close-icons-modal" title="Fechar (Esc)">✕</button>
+      </div>
+
+      <!-- Barra de Pesquisa -->
+      <div class="modal-search-bar">
+        <div class="input-icon-wrap" style="width: 100%;">
+          <svg class="input-prefix-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input type="text" id="input-search-icons" placeholder="Buscar ícone (ex: Instagram, WhatsApp, PIX, Wi-Fi, Estrela, Telefone...)">
+        </div>
+      </div>
+
+      <!-- Filtros por Categoria -->
+      <div class="icon-category-tabs" id="icon-category-tabs"></div>
+
+      <!-- Grid de Ícones -->
+      <div class="icons-picker-grid" id="icons-picker-grid"></div>
+    </div>
+  </div>
+
+  <!-- MENU DE CONTEXTO COM BOTÃO DIREITO DO MOUSE -->
+  <div class="custom-context-menu hidden" id="custom-context-menu">
+    <div class="context-menu-header" id="ctx-header-title">Elemento</div>
+    <div class="context-menu-divider"></div>
+    <button type="button" class="ctx-item" id="ctx-bring-front">
+      <span class="ctx-icon">🔝</span>
+      <span>Trazer para Frente (Por Cima)</span>
+    </button>
+    <button type="button" class="ctx-item" id="ctx-move-up">
+      <span class="ctx-icon">⬆️</span>
+      <span>Subir uma Camada</span>
+    </button>
+    <button type="button" class="ctx-item" id="ctx-move-down">
+      <span class="ctx-icon">⬇️</span>
+      <span>Descer uma Camada</span>
+    </button>
+    <button type="button" class="ctx-item" id="ctx-send-back">
+      <span class="ctx-icon">🔻</span>
+      <span>Enviar para Trás (Por Baixo)</span>
+    </button>
+    <div class="context-menu-divider"></div>
+    <button type="button" class="ctx-item" id="ctx-center">
+      <span class="ctx-icon">🎯</span>
+      <span>Centralizar na Placa</span>
+    </button>
+    <button type="button" class="ctx-item" id="ctx-duplicate">
+      <span class="ctx-icon">📋</span>
+      <span>Duplicar Elemento</span>
+    </button>
+    <button type="button" class="ctx-item ctx-danger" id="ctx-delete">
+      <span class="ctx-icon">🗑️</span>
+      <span>Excluir Elemento</span>
+    </button>
   </div>
 
   <!-- Toast Notification Mount Container -->
