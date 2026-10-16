@@ -30,6 +30,7 @@ class QRGeneratorService {
     const key = JSON.stringify({
       url: config.url || '',
       fgColor: config.fgColor || '#000000',
+      bgColor: config.bgColor || '#ffffff',
       dotsStyle: config.dotsStyle || 'rounded',
       logoChoice: config.logoChoice || 'google',
       customLogoUrl: config.customLogoUrl || '',
@@ -65,9 +66,9 @@ class QRGeneratorService {
     const cellSize = size / totalModules;
     const startOffset = marginModules * cellSize;
 
-    // 2. Fundo
+    // 2. Fundo (Transparente ou com Cor Personalizada)
     if (!config.transparentBg) {
-      ctx.fillStyle = '#ffffff';
+      ctx.fillStyle = config.bgColor || '#ffffff';
       ctx.fillRect(0, 0, size, size);
     } else {
       ctx.clearRect(0, 0, size, size);

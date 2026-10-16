@@ -409,13 +409,28 @@
               <input type="range" id="range-qr-pos-y" min="10" max="90" value="68" step="1" class="styled-range">
             </div>
 
+            <!-- Cor do Fundo & Fundo Transparente QR 1 -->
+            <div class="input-group">
+              <label for="input-qr-bg-color">Cor do Fundo do QR 1</label>
+              <div class="color-selection-row">
+                <input type="color" id="input-qr-bg-color" value="#ffffff" class="styled-color-picker">
+                <div class="preset-dots-wrap" id="preset-bg-dots-wrap1">
+                  <button type="button" class="preset-dot active" style="background: #ffffff; border: 1px solid #cbd5e1;" data-color="#ffffff" title="Branco"></button>
+                  <button type="button" class="preset-dot" style="background: #000000;" data-color="#000000" title="Preto"></button>
+                  <button type="button" class="preset-dot" style="background: #f8fafc;" data-color="#f8fafc" title="Cinza Suave"></button>
+                  <button type="button" class="preset-dot" style="background: #fef08a;" data-color="#fef08a" title="Amarelo"></button>
+                  <button type="button" class="preset-dot" style="background: #bae6fd;" data-color="#bae6fd" title="Azul"></button>
+                </div>
+              </div>
+            </div>
+
             <div class="toggle-group">
               <div class="toggle-label-wrap">
-                <label for="toggle-qr-card-bg">Fundo Branco de Destaque</label>
-                <span class="field-hint">Garante leitura perfeita do QR Code</span>
+                <label for="toggle-qr-transparent-bg">Fundo Transparente</label>
+                <span class="field-hint">Exibe apenas os módulos do QR sobre a placa</span>
               </div>
               <label class="switch">
-                <input type="checkbox" id="toggle-qr-card-bg" checked>
+                <input type="checkbox" id="toggle-qr-transparent-bg">
                 <span class="slider round"></span>
               </label>
             </div>
@@ -499,6 +514,32 @@
                   <button type="button" class="preset-dot" style="background: #1a73e8;" data-color="#1a73e8" title="Azul Google"></button>
                 </div>
               </div>
+            </div>
+
+            <!-- Cor do Fundo & Fundo Transparente QR 2 -->
+            <div class="input-group">
+              <label for="input-qr2-bg-color">Cor do Fundo do QR 2</label>
+              <div class="color-selection-row">
+                <input type="color" id="input-qr2-bg-color" value="#ffffff" class="styled-color-picker">
+                <div class="preset-dots-wrap" id="preset-bg-dots-wrap2">
+                  <button type="button" class="preset-dot active" style="background: #ffffff; border: 1px solid #cbd5e1;" data-color="#ffffff" title="Branco"></button>
+                  <button type="button" class="preset-dot" style="background: #000000;" data-color="#000000" title="Preto"></button>
+                  <button type="button" class="preset-dot" style="background: #f8fafc;" data-color="#f8fafc" title="Cinza Suave"></button>
+                  <button type="button" class="preset-dot" style="background: #fef08a;" data-color="#fef08a" title="Amarelo"></button>
+                  <button type="button" class="preset-dot" style="background: #bae6fd;" data-color="#bae6fd" title="Azul"></button>
+                </div>
+              </div>
+            </div>
+
+            <div class="toggle-group">
+              <div class="toggle-label-wrap">
+                <label for="toggle-qr2-transparent-bg">Fundo Transparente</label>
+                <span class="field-hint">Exibe apenas os módulos do QR 2 sobre a placa</span>
+              </div>
+              <label class="switch">
+                <input type="checkbox" id="toggle-qr2-transparent-bg">
+                <span class="slider round"></span>
+              </label>
             </div>
 
             <!-- Posição e Tamanho QR 2 -->

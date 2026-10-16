@@ -35,11 +35,13 @@ export class ControlsManager {
 
     stateManager.on('change:qrCode', () => {
       this.updateTransformBox();
+      this.syncDualQRUIFromState();
       if (this.activeTarget === 'qr1') this.updateInspector();
     });
 
     stateManager.on('change:qrCode2', () => {
       this.updateTransformBox();
+      this.syncDualQRUIFromState();
       if (this.activeTarget === 'qr2') this.updateInspector();
     });
 
@@ -115,17 +117,26 @@ export class ControlsManager {
             if (!file.type.startsWith('image/')) return;
             const reader = new FileReader();
             reader.onload = (e) => {
-              const newLayer = stateManager.addLayer({
-                type: 'image',
-                name: file.name.replace(/\.[^/.]+$/, ""),
-                url: e.target.result,
-                x: 50 + (index * 4),
-                y: 35 + (index * 4),
-                sizePercent: 28,
-                opacity: 1.0,
-                borderRadius: 0
-              });
-              this.setActiveTarget(newLayer.id);
+              const dataUrl = e.target.result;
+              const imgObj = new Image();
+              imgObj.onload = () => {
+                const aspectRatio = (imgObj.naturalHeight && imgObj.naturalWidth)
+                  ? (imgObj.naturalHeight / imgObj.naturalWidth)
+                  : 1;
+                const newLayer = stateManager.addLayer({
+                  type: 'image',
+                  name: file.name.replace(/\.[^/.]+$/, ""),
+                  url: dataUrl,
+                  aspectRatio,
+                  x: 50 + (index * 4),
+                  y: 35 + (index * 4),
+                  sizePercent: 28,
+                  opacity: 1.0,
+                  borderRadius: 0
+                });
+                this.setActiveTarget(newLayer.id);
+              };
+              imgObj.src = dataUrl;
             };
             reader.readAsDataURL(file);
           });
@@ -527,6 +538,34 @@ export class ControlsManager {
       });
     }
 
+    const bgColorPicker = document.getElementById(`input-qr${suffix}-bg-color`);
+    const toggleTransparent = document.getElementById(`toggle-qr${suffix}-transparent-bg`);
+    const bgPresetDots = document.querySelectorAll(`#preset-bg-dots-wrap${num} .preset-dot`);
+
+    if (bgColorPicker) {
+      bgColorPicker.addEventListener('input', (e) => {
+        stateManager.update(stateKey, { bgColor: e.target.value, transparentBg: false });
+        if (toggleTransparent) toggleTransparent.checked = false;
+      });
+    }
+
+    if (toggleTransparent) {
+      toggleTransparent.addEventListener('change', (e) => {
+        stateManager.set(`${stateKey}.transparentBg`, e.target.checked);
+      });
+    }
+
+    bgPresetDots.forEach(dot => {
+      dot.addEventListener('click', () => {
+        const color = dot.getAttribute('data-color');
+        if (bgColorPicker) bgColorPicker.value = color;
+        stateManager.update(stateKey, { bgColor: color, transparentBg: false });
+        if (toggleTransparent) toggleTransparent.checked = false;
+        bgPresetDots.forEach(d => d.classList.remove('active'));
+        dot.classList.add('active');
+      });
+    });
+
     if (rangeSize) {
       rangeSize.addEventListener('input', (e) => {
         const val = Number(e.target.value);
@@ -593,7 +632,8 @@ export class ControlsManager {
   }
 
   syncDualQRUIFromState() {
-    const qr2 = stateManager.get('qrCode2');
+    const qr1 = stateManager.get('qrCode') || {};
+    const qr2 = stateManager.get('qrCode2') || {};
     const toggleQR2 = document.getElementById('toggle-enable-qr2');
     const dualPresetsWrap = document.getElementById('dual-qr-presets-wrap');
     const qr2Badge = document.getElementById('qr2-active-badge');
@@ -608,6 +648,17 @@ export class ControlsManager {
         qr2Badge?.classList.add('hidden');
       }
     }
+
+    // Sincroniza inputs de cor de fundo e transparência
+    const bg1 = document.getElementById('input-qr-bg-color');
+    const trans1 = document.getElementById('toggle-qr-transparent-bg');
+    if (bg1 && qr1.bgColor) bg1.value = qr1.bgColor;
+    if (trans1) trans1.checked = !!qr1.transparentBg;
+
+    const bg2 = document.getElementById('input-qr2-bg-color');
+    const trans2 = document.getElementById('toggle-qr2-transparent-bg');
+    if (bg2 && qr2.bgColor) bg2.value = qr2.bgColor;
+    if (trans2) trans2.checked = !!qr2.transparentBg;
   }
 
   // --- 6. PAINEL INSPECTOR DO ELEMENTO SELECIONADO ---
@@ -865,6 +916,33 @@ export class ControlsManager {
           <label>Rótulo Abaixo do QR</label>
           <input type="text" id="insp-qr-label" value="${qr.label || ''}">
         </div>
+        <div class="input-group">
+          <label>Cor dos Módulos (QR Code)</label>
+          <input type="color" id="insp-qr-color" value="${qr.fgColor || '#000000'}" class="styled-color-picker" style="width: 100%;">
+        </div>
+        <div class="input-group">
+          <label>Cor do Fundo do QR Code</label>
+          <div class="color-selection-row">
+            <input type="color" id="insp-qr-bg-color" value="${qr.bgColor || '#ffffff'}" class="styled-color-picker" ${qr.transparentBg ? 'disabled style="opacity: 0.4;"' : ''}>
+            <div class="preset-dots-wrap" id="insp-qr-bg-presets">
+              <button type="button" class="preset-dot" style="background: #ffffff; border: 1px solid #cbd5e1;" data-color="#ffffff" title="Branco"></button>
+              <button type="button" class="preset-dot" style="background: #000000;" data-color="#000000" title="Preto"></button>
+              <button type="button" class="preset-dot" style="background: #f8fafc;" data-color="#f8fafc" title="Cinza Suave"></button>
+              <button type="button" class="preset-dot" style="background: #fef08a;" data-color="#fef08a" title="Amarelo"></button>
+              <button type="button" class="preset-dot" style="background: #bae6fd;" data-color="#bae6fd" title="Azul"></button>
+            </div>
+          </div>
+        </div>
+        <div class="toggle-group" style="margin-bottom: 0.8rem;">
+          <div class="toggle-label-wrap">
+            <label for="insp-qr-transparent">Fundo Transparente</label>
+            <span class="field-hint">Exibe apenas os pontos do QR sobre a placa</span>
+          </div>
+          <label class="switch">
+            <input type="checkbox" id="insp-qr-transparent" ${qr.transparentBg ? 'checked' : ''}>
+            <span class="slider round"></span>
+          </label>
+        </div>
         <div class="slider-row">
           <div class="slider-header-flex">
             <label>Tamanho do QR Code</label>
@@ -879,6 +957,21 @@ export class ControlsManager {
       });
       container.querySelector('#insp-qr-label')?.addEventListener('input', (e) => {
         this.debounce('insp_qr_label', () => stateManager.set('qrCode.label', e.target.value));
+      });
+      container.querySelector('#insp-qr-color')?.addEventListener('input', (e) => {
+        stateManager.set('qrCode.fgColor', e.target.value);
+      });
+      container.querySelector('#insp-qr-bg-color')?.addEventListener('input', (e) => {
+        stateManager.update('qrCode', { bgColor: e.target.value, transparentBg: false });
+      });
+      container.querySelector('#insp-qr-transparent')?.addEventListener('change', (e) => {
+        stateManager.set('qrCode.transparentBg', e.target.checked);
+      });
+      container.querySelectorAll('#insp-qr-bg-presets .preset-dot').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const color = btn.getAttribute('data-color');
+          stateManager.update('qrCode', { bgColor: color, transparentBg: false });
+        });
       });
       container.querySelector('#insp-qr-size')?.addEventListener('input', (e) => {
         stateManager.set('qrCode.sizePercent', Number(e.target.value));
@@ -899,6 +992,33 @@ export class ControlsManager {
           <label>Rótulo Abaixo do 2º QR</label>
           <input type="text" id="insp-qr2-label" value="${qr2.label || ''}">
         </div>
+        <div class="input-group">
+          <label>Cor dos Módulos do QR 2</label>
+          <input type="color" id="insp-qr2-color" value="${qr2.fgColor || '#000000'}" class="styled-color-picker" style="width: 100%;">
+        </div>
+        <div class="input-group">
+          <label>Cor do Fundo do QR 2</label>
+          <div class="color-selection-row">
+            <input type="color" id="insp-qr2-bg-color" value="${qr2.bgColor || '#ffffff'}" class="styled-color-picker" ${qr2.transparentBg ? 'disabled style="opacity: 0.4;"' : ''}>
+            <div class="preset-dots-wrap" id="insp-qr2-bg-presets">
+              <button type="button" class="preset-dot" style="background: #ffffff; border: 1px solid #cbd5e1;" data-color="#ffffff" title="Branco"></button>
+              <button type="button" class="preset-dot" style="background: #000000;" data-color="#000000" title="Preto"></button>
+              <button type="button" class="preset-dot" style="background: #f8fafc;" data-color="#f8fafc" title="Cinza Suave"></button>
+              <button type="button" class="preset-dot" style="background: #fef08a;" data-color="#fef08a" title="Amarelo"></button>
+              <button type="button" class="preset-dot" style="background: #bae6fd;" data-color="#bae6fd" title="Azul"></button>
+            </div>
+          </div>
+        </div>
+        <div class="toggle-group" style="margin-bottom: 0.8rem;">
+          <div class="toggle-label-wrap">
+            <label for="insp-qr2-transparent">Fundo Transparente</label>
+            <span class="field-hint">Exibe apenas os pontos do QR 2 sobre a placa</span>
+          </div>
+          <label class="switch">
+            <input type="checkbox" id="insp-qr2-transparent" ${qr2.transparentBg ? 'checked' : ''}>
+            <span class="slider round"></span>
+          </label>
+        </div>
         <div class="slider-row">
           <div class="slider-header-flex">
             <label>Tamanho do QR 2</label>
@@ -913,6 +1033,21 @@ export class ControlsManager {
       });
       container.querySelector('#insp-qr2-label')?.addEventListener('input', (e) => {
         this.debounce('insp_qr2_label', () => stateManager.set('qrCode2.label', e.target.value));
+      });
+      container.querySelector('#insp-qr2-color')?.addEventListener('input', (e) => {
+        stateManager.set('qrCode2.fgColor', e.target.value);
+      });
+      container.querySelector('#insp-qr2-bg-color')?.addEventListener('input', (e) => {
+        stateManager.update('qrCode2', { bgColor: e.target.value, transparentBg: false });
+      });
+      container.querySelector('#insp-qr2-transparent')?.addEventListener('change', (e) => {
+        stateManager.set('qrCode2.transparentBg', e.target.checked);
+      });
+      container.querySelectorAll('#insp-qr2-bg-presets .preset-dot').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const color = btn.getAttribute('data-color');
+          stateManager.update('qrCode2', { bgColor: color, transparentBg: false });
+        });
       });
       container.querySelector('#insp-qr2-size')?.addEventListener('input', (e) => {
         stateManager.set('qrCode2.sizePercent', Number(e.target.value));
@@ -1017,7 +1152,7 @@ export class ControlsManager {
             <label>Tamanho da Imagem</label>
             <span class="slider-val-badge">${layer.sizePercent || 30}%</span>
           </div>
-          <input type="range" id="insp-img-size" min="8" max="100" value="${layer.sizePercent || 30}" class="styled-range">
+          <input type="range" id="insp-img-size" min="5" max="150" value="${layer.sizePercent || 30}" class="styled-range">
         </div>
         <div class="slider-row">
           <div class="slider-header-flex">
@@ -1048,14 +1183,14 @@ export class ControlsManager {
             <label>Largura (%)</label>
             <span class="slider-val-badge">${layer.widthPercent || 40}%</span>
           </div>
-          <input type="range" id="insp-shape-w" min="10" max="95" value="${layer.widthPercent || 40}" class="styled-range">
+          <input type="range" id="insp-shape-w" min="5" max="150" value="${layer.widthPercent || 40}" class="styled-range">
         </div>
         <div class="slider-row">
           <div class="slider-header-flex">
             <label>Altura (%)</label>
             <span class="slider-val-badge">${layer.heightPercent || 25}%</span>
           </div>
-          <input type="range" id="insp-shape-h" min="5" max="90" value="${layer.heightPercent || 25}" class="styled-range">
+          <input type="range" id="insp-shape-h" min="3" max="150" value="${layer.heightPercent || 25}" class="styled-range">
         </div>
       `;
 
@@ -1215,8 +1350,8 @@ export class ControlsManager {
     if (this.activeTarget === 'qr1') {
       const q1 = state.qrCode || {};
       const size = q1.sizePercent || 42;
-      const halfW = (size * 1.14) / 2;
-      const halfH = (size * aspect * 1.14) / 2;
+      const halfW = (size * 1.08) / 2;
+      const halfH = (size * aspect * 1.08) / 2;
       const px = q1.posX !== undefined ? q1.posX : 50;
       const py = q1.posY !== undefined ? q1.posY : 68;
       return {
@@ -1233,8 +1368,8 @@ export class ControlsManager {
     if (this.activeTarget === 'qr2') {
       const q2 = state.qrCode2 || {};
       const size = q2.sizePercent || 32;
-      const halfW = (size * 1.14) / 2;
-      const halfH = (size * aspect * 1.14) / 2;
+      const halfW = (size * 1.08) / 2;
+      const halfH = (size * aspect * 1.08) / 2;
       const px = q2.posX !== undefined ? q2.posX : 72;
       const py = q2.posY !== undefined ? q2.posY : 68;
       return {
@@ -1267,7 +1402,16 @@ export class ControlsManager {
       } else if (layer.type === 'image') {
         size = layer.sizePercent || 28;
         halfW = size / 2;
-        halfH = halfW * aspect;
+        let imgRatio = layer.aspectRatio;
+        if (!imgRatio && layer.url) {
+          const tempImg = new Image();
+          tempImg.src = layer.url;
+          if (tempImg.naturalWidth && tempImg.naturalHeight) {
+            imgRatio = tempImg.naturalHeight / tempImg.naturalWidth;
+            layer.aspectRatio = imgRatio;
+          }
+        }
+        halfH = halfW * aspect * (imgRatio || 1);
       } else if (layer.type === 'shape') {
         halfW = (layer.widthPercent || 40) / 2;
         halfH = (layer.heightPercent || 25) / 2;
@@ -1426,8 +1570,12 @@ export class ControlsManager {
       if (Math.abs(newX - 50) <= 2.2) newX = 50;
       if (Math.abs(newY - 50) <= 2.2) newY = 50;
 
-      newX = Math.round(Math.min(92, Math.max(8, newX)));
-      newY = Math.round(Math.min(92, Math.max(8, newY)));
+      const isImgOrShape = this.activeTarget && !this.activeTarget.startsWith('qr');
+      const minBound = isImgOrShape ? -25 : 8;
+      const maxBound = isImgOrShape ? 125 : 92;
+
+      newX = Math.round(Math.min(maxBound, Math.max(minBound, newX)));
+      newY = Math.round(Math.min(maxBound, Math.max(minBound, newY)));
 
       if (this.activeTarget === 'qr1') {
         stateManager.update('qrCode', { posX: newX, posY: newY });
@@ -1478,44 +1626,174 @@ export class ControlsManager {
         e.stopPropagation();
         e.preventDefault();
 
+        const handleType = handle.dataset.handle;
         const bounds = this.getActiveBounds();
         if (!bounds) return;
 
         const startX = e.clientX;
         const startY = e.clientY;
         const startSize = bounds.size;
+        const startW = bounds.width;
+        const startH = bounds.height;
         const rect = previewWrapper.getBoundingClientRect();
+        if (!rect.width || !rect.height) return;
+
+        const state = stateManager.get();
+        const aspect = (state.dimension?.widthMm || 110) / (state.dimension?.heightMm || 150);
+
+        const targetId = this.activeTarget;
+        const isQr1 = targetId === 'qr1';
+        const isQr2 = targetId === 'qr2';
+        const layer = (!isQr1 && !isQr2) ? (stateManager.get('artwork.layers') || []).find(l => l.id === targetId) : null;
+        const isShape = layer?.type === 'shape';
+        const isText = layer?.type === 'text';
+        const isImage = layer?.type === 'image';
+        const isIcon = layer?.type === 'icon';
+
+        // Aspect ratio exato para manter fidelidade no movimento vertical
+        let imgRatio = layer?.aspectRatio || 1;
+        if (isImage && !layer?.aspectRatio && layer?.url) {
+          const tempImg = new Image();
+          tempImg.src = layer.url;
+          if (tempImg.naturalWidth && tempImg.naturalHeight) {
+            imgRatio = tempImg.naturalHeight / tempImg.naturalWidth;
+            layer.aspectRatio = imgRatio;
+          }
+        }
+        const effectiveRatio = (isQr1 || isQr2) ? (aspect * 1.08) : (aspect * (imgRatio || 1));
+
+        const transformBox = document.getElementById('transform-box');
+        transformBox?.classList.add('dragging');
+
+        try { handle.setPointerCapture(e.pointerId); } catch {}
 
         const onPointerMove = (ev) => {
           const deltaX = ((ev.clientX - startX) / rect.width) * 100;
           const deltaY = ((ev.clientY - startY) / rect.height) * 100;
-          const delta = Math.hypot(deltaX, deltaY) * (deltaX > 0 || deltaY > 0 ? 1 : -1);
 
-          let newSize = Math.round(Math.min(95, Math.max(6, startSize + delta)));
+          const deltaXSize = deltaX * 2;
+          const deltaYSize = (deltaY * 2) / effectiveRatio;
 
-          if (this.activeTarget === 'qr1') {
+          // Se for forma geométrica/cartão, permite esticar largura e altura separadamente
+          if (isShape) {
+            let newW = layer.widthPercent || 40;
+            let newH = layer.heightPercent || 25;
+
+            if (['e', 'w'].includes(handleType)) {
+              newW = Math.round(startW + (handleType === 'e' ? deltaXSize : -deltaXSize));
+            } else if (['n', 's'].includes(handleType)) {
+              newH = Math.round(startH + (handleType === 's' ? (deltaY * 2) : -(deltaY * 2)));
+            } else {
+              const xMult = ['se', 'ne'].includes(handleType) ? 1 : -1;
+              const yMult = ['se', 'sw'].includes(handleType) ? 1 : -1;
+              newW = Math.round(startW + (deltaXSize * xMult));
+              newH = Math.round(startH + ((deltaY * 2) * yMult));
+            }
+
+            if (Math.abs(newW - 100) <= 2.2) newW = 100;
+            if (Math.abs(newH - 100) <= 2.2) newH = 100;
+            newW = Math.min(160, Math.max(5, newW));
+            newH = Math.min(160, Math.max(3, newH));
+
+            stateManager.updateLayer(layer.id, { widthPercent: newW, heightPercent: newH });
+            this.updateTransformBox();
+            return;
+          }
+
+          // Para imagens, QR Codes, ícones e textos: escala direcional precisa e intuitiva
+          let delta = 0;
+          switch (handleType) {
+            case 'e': // Lateral direita: puxar para a direita aumenta
+              delta = deltaXSize;
+              break;
+            case 'w': // Lateral esquerda: puxar para a esquerda aumenta
+              delta = -deltaXSize;
+              break;
+            case 's': // Borda inferior: puxar para baixo aumenta
+              delta = deltaYSize;
+              break;
+            case 'n': // Borda superior: puxar para cima aumenta
+              delta = -deltaYSize;
+              break;
+            case 'se': // Canto inferior direito: direita ou baixo aumenta
+              delta = Math.abs(deltaXSize) >= Math.abs(deltaYSize) ? deltaXSize : deltaYSize;
+              break;
+            case 'sw': { // Canto inferior esquerdo: esquerda ou baixo aumenta
+              const xComp = -deltaXSize;
+              const yComp = deltaYSize;
+              delta = Math.abs(xComp) >= Math.abs(yComp) ? xComp : yComp;
+              break;
+            }
+            case 'ne': { // Canto superior direito: direita ou cima aumenta
+              const xComp = deltaXSize;
+              const yComp = -deltaYSize;
+              delta = Math.abs(xComp) >= Math.abs(yComp) ? xComp : yComp;
+              break;
+            }
+            case 'nw': { // Canto superior esquerdo: esquerda ou cima aumenta
+              const xComp = -deltaXSize;
+              const yComp = -deltaYSize;
+              delta = Math.abs(xComp) >= Math.abs(yComp) ? xComp : yComp;
+              break;
+            }
+            default:
+              delta = deltaXSize;
+          }
+
+          let minSize = 6;
+          let maxSize = 160;
+
+          if (isQr1 || isQr2) {
+            minSize = 15;
+            maxSize = 85;
+          } else if (isIcon) {
+            minSize = 4;
+            maxSize = 60;
+          } else if (isText) {
+            minSize = 10;
+            maxSize = 140;
+          } else if (isImage) {
+            minSize = 5;
+            maxSize = 160;
+          }
+
+          let newSize = startSize + delta;
+
+          // Snap magnético suave para 100% e 50%
+          if (Math.abs(newSize - 100) <= 2.5) {
+            newSize = 100;
+          } else if (Math.abs(newSize - 50) <= 1.5) {
+            newSize = 50;
+          }
+
+          newSize = Math.round(Math.min(maxSize, Math.max(minSize, newSize)));
+
+          if (isQr1) {
             stateManager.set('qrCode.sizePercent', newSize);
-          } else if (this.activeTarget === 'qr2') {
+          } else if (isQr2) {
             stateManager.set('qrCode2.sizePercent', newSize);
-          } else {
-            const layer = (stateManager.get('artwork.layers') || []).find(l => l.id === this.activeTarget);
-            if (layer) {
-              if (layer.type === 'text') stateManager.updateLayer(layer.id, { fontSize: Math.round(newSize) });
-              else if (layer.type === 'shape') stateManager.updateLayer(layer.id, { widthPercent: newSize });
-              else stateManager.updateLayer(layer.id, { sizePercent: newSize });
+          } else if (layer) {
+            if (isText) {
+              stateManager.updateLayer(layer.id, { fontSize: newSize });
+            } else {
+              stateManager.updateLayer(layer.id, { sizePercent: newSize });
             }
           }
 
           this.updateTransformBox();
         };
 
-        const onPointerUp = () => {
+        const onPointerUp = (ev) => {
+          transformBox?.classList.remove('dragging');
+          try { handle.releasePointerCapture(ev.pointerId); } catch {}
           window.removeEventListener('pointermove', onPointerMove);
           window.removeEventListener('pointerup', onPointerUp);
+          window.removeEventListener('pointercancel', onPointerUp);
         };
 
         window.addEventListener('pointermove', onPointerMove);
         window.addEventListener('pointerup', onPointerUp);
+        window.addEventListener('pointercancel', onPointerUp);
       });
     });
   }
@@ -1530,19 +1808,35 @@ export class ControlsManager {
       const bounds = this.getActiveBounds();
       if (!bounds) return;
 
-      let newSize = Math.round(Math.min(95, Math.max(6, bounds.size + delta)));
+      const targetId = this.activeTarget;
+      const isQr = targetId === 'qr1' || targetId === 'qr2';
+      const layer = (!isQr) ? (stateManager.get('artwork.layers') || []).find(l => l.id === targetId) : null;
 
-      if (this.activeTarget === 'qr1') {
+      let minSize = 6;
+      let maxSize = 160;
+      if (isQr) {
+        minSize = 15;
+        maxSize = 85;
+      } else if (layer?.type === 'icon') {
+        minSize = 4;
+        maxSize = 60;
+      } else if (layer?.type === 'text') {
+        minSize = 10;
+        maxSize = 140;
+      }
+
+      let newSize = bounds.size + delta;
+      if (Math.abs(newSize - 100) <= 2) newSize = 100;
+      newSize = Math.round(Math.min(maxSize, Math.max(minSize, newSize)));
+
+      if (targetId === 'qr1') {
         stateManager.set('qrCode.sizePercent', newSize);
-      } else if (this.activeTarget === 'qr2') {
+      } else if (targetId === 'qr2') {
         stateManager.set('qrCode2.sizePercent', newSize);
-      } else {
-        const layer = (stateManager.get('artwork.layers') || []).find(l => l.id === this.activeTarget);
-        if (layer) {
-          if (layer.type === 'text') stateManager.updateLayer(layer.id, { fontSize: Math.round(newSize) });
-          else if (layer.type === 'shape') stateManager.updateLayer(layer.id, { widthPercent: newSize });
-          else stateManager.updateLayer(layer.id, { sizePercent: newSize });
-        }
+      } else if (layer) {
+        if (layer.type === 'text') stateManager.updateLayer(layer.id, { fontSize: newSize });
+        else if (layer.type === 'shape') stateManager.updateLayer(layer.id, { widthPercent: newSize });
+        else stateManager.updateLayer(layer.id, { sizePercent: newSize });
       }
 
       this.updateTransformBox();

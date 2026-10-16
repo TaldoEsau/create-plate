@@ -114,7 +114,7 @@ export const STUDIO_TEMPLATES = [
       qrCode: {
         enabled: true,
         url: 'https://google.com',
-        label: 'Avalie no Google',
+        label: '',
         fgColor: '#000000',
         dotsStyle: 'rounded',
         logoChoice: 'google',
@@ -124,7 +124,7 @@ export const STUDIO_TEMPLATES = [
         posY: 56,
         sizePercent: 54,
         cardBackground: true,
-        showFrame: true
+        showFrame: false
       },
       qrCode2: {
         enabled: false,
@@ -209,7 +209,7 @@ export const STUDIO_TEMPLATES = [
           id: 'txt_label_qr1',
           type: 'text',
           name: 'Rótulo Google',
-          text: 'AVALIE NO GOOGLE',
+          text: '',
           fontFamily: 'Outfit',
           fontSize: 12,
           fontWeight: '700',
@@ -290,7 +290,7 @@ export const STUDIO_TEMPLATES = [
       qrCode: {
         enabled: true,
         url: 'https://google.com',
-        label: 'Avalie no Google',
+        label: '',
         fgColor: '#000000',
         dotsStyle: 'rounded',
         logoChoice: 'google',
@@ -633,7 +633,7 @@ export const STUDIO_TEMPLATES = [
       qrCode: {
         enabled: true,
         url: 'https://google.com',
-        label: 'QR Code',
+        label: '',
         fgColor: '#000000',
         dotsStyle: 'rounded',
         logoChoice: 'none',

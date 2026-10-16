@@ -9,8 +9,8 @@ class StateManager {
 
     this.state = {
       dimension: { ...DEFAULT_DIMENSIONS },
-      qrCode: initialTemplateState.qrCode,
-      qrCode2: initialTemplateState.qrCode2,
+      qrCode: { bgColor: '#ffffff', transparentBg: false, ...(initialTemplateState.qrCode || {}) },
+      qrCode2: { bgColor: '#ffffff', transparentBg: false, ...(initialTemplateState.qrCode2 || {}) },
       artwork: {
         mode: initialTemplateState.mode || 'studio',
         backgroundColor: initialTemplateState.backgroundColor || '#ffffff',
@@ -28,7 +28,7 @@ class StateManager {
         footerCallout: 'APONTE A CÂMERA E AVALIE!',
         starsCount: 5,
         starsColor: '#FBBC05',
-        showFrame: true,
+        showFrame: false,
         customUploadedImageUrl: null,
         fitMode: 'cover',
         imageOffsetX: 0,

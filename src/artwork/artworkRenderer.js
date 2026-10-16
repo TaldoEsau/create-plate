@@ -254,33 +254,20 @@ class ArtworkRenderer {
     const qrX = Math.round(qrCenterX - (qrSize / 2));
     const qrY = Math.round(qrCenterY - (qrSize / 2));
 
-    // 1. Moldura Google Multicolorida (se ativado)
-    if (qrConfig.showFrame) {
-      const framePadding = Math.round(18 * scale);
-      const totalBox = qrSize + (framePadding * 2);
-      drawGoogleRoundedFrame(
-        ctx,
-        qrX - framePadding,
-        qrY - framePadding,
-        totalBox,
-        totalBox,
-        Math.round(28 * scale),
-        Math.round(6 * scale)
-      );
-    }
+    // 1. Moldura Google Multicolorida (removida)
 
-    // 2. Fundo Branco de Destaque
-    if (qrConfig.cardBackground !== false) {
+    // 2. Fundo de Destaque (Transparente ou com Cor Personalizada)
+    if (qrConfig.cardBackground !== false && !qrConfig.transparentBg) {
       const pad = Math.round(qrSize * 0.08);
       const cardR = Math.round((qrConfig.cardBorderRadius || 18) * scale);
 
       ctx.save();
-      ctx.fillStyle = '#ffffff';
+      ctx.fillStyle = qrConfig.bgColor || '#ffffff';
       ctx.beginPath();
       ctx.roundRect(qrX - pad, qrY - pad, qrSize + (pad * 2), qrSize + (pad * 2), cardR);
       ctx.fill();
 
-      // Borda sutil de acabamento
+      // Borda sutil de acabamento (apenas se não for escuro total)
       ctx.strokeStyle = 'rgba(0, 0, 0, 0.06)';
       ctx.lineWidth = Math.max(1, Math.round(1.5 * scale));
       ctx.stroke();
